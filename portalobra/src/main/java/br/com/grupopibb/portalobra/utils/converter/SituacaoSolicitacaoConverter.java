@@ -36,10 +36,6 @@ public class SituacaoSolicitacaoConverter implements Converter {
     @Override
     public Object getAsObject(final FacesContext facesContext,
             final UIComponent component, final String value) {
-
-        System.out.println("OBJECT VALUE: " + value);
-        System.out.println("OBJECT LABEL: " + EnumSituacaoSolicitacao.valueOf(value));
-
         return EnumSituacaoSolicitacao.getForLabel(value);
     }
 
@@ -58,11 +54,6 @@ public class SituacaoSolicitacaoConverter implements Converter {
         if (object == null) {
             return null;
         }
-
-
-        EnumSituacaoSolicitacao obj = EnumSituacaoSolicitacao.valueOf(object.toString());
-        System.out.println(obj);
-        return obj.getLabel();
-
+        return EnumSituacaoSolicitacao.valueOf(object.toString()).getLabel();
     }
 }

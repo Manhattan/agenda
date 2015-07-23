@@ -36,7 +36,6 @@ public class ConnectionFactory {
                     + getConnection().getCatalog(),//NOME DO BANCO DE DADOS
                     user, pass);
         } catch (SQLException ex) {
-            System.out.println(ex);
             return null;
         }
     }

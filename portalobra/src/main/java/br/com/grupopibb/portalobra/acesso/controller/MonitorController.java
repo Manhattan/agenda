@@ -42,7 +42,6 @@ public class MonitorController {
     }
 
     public void registraAcesso() {
-        System.out.println("VERIFICANDO REGISTRO DE ACESSO: " + new Date());
         if (loginController != null && loginController.getFuncionario() != null && loginController.getStatusLogin() == StatusLogin.ATIVO) {
             this.current = getNewMonitor();
             create();

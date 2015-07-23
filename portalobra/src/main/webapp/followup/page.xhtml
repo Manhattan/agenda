@@ -235,11 +235,15 @@
                             <th>#{msg.data}</th>
                             <th>#{msg.situacao}</th>
                         </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td><h:outputText value="#{msg.PENDENTE}" rendered="#{(followUpSolicitacoesController.current.pedido.situacao eq 'A' || followUpSolicitacoesController.current.pedido.situacao eq 'R') ? false : true}" /></td>
-                        </tr>
+
+                        <h:panelGroup rendered="#{(followUpSolicitacoesController.current.pedido.situacao eq 'A' || followUpSolicitacoesController.current.pedido.situacao eq 'R') ? false : true}">
+                            <tr>
+                                <td colspan="3" style="text-align: left; font-weight: bold">
+                                    <h:outputText value="#{msg.pendenteDeAutorizacao}" style="margin-left: 10px" />
+                                </td>
+                            </tr>
+                        </h:panelGroup>
+
                         <ui:repeat value="#{followUpSolicitacoesController.pedidoAutorizantes}" var="aut" varStatus="a" rendered="#{followUpSolicitacoesController.current.pedido.situacao != null}">
                             <tr>
                                 <td>#{aut.usuario}</td>
@@ -251,14 +255,27 @@
                                 <td>#{aut.situacao}</td>
                             </tr>
                         </ui:repeat>
-                        <tr>
-                            <td><h:outputText value="#{msg.observacao}:" rendered="#{followUpSolicitacoesController.current.pedido.observacao != null and followUpSolicitacoesController.current.pedido.observacao ne ''}" /> </td>
-                            <td colspan="2"><h:outputText value="#{followUpSolicitacoesController.current.pedido.observacao}" rendered="#{followUpSolicitacoesController.current.pedido.observacao != null and followUpSolicitacoesController.current.pedido.observacao ne ''}" /></td>
-                        </tr>
-                        <tr>
-                            <td><h:outputText value="#{msg.motivo}:" rendered="#{followUpSolicitacoesController.current.pedido.motivo != null and followUpSolicitacoesController.current.pedido.motivo ne ''}" /> </td>
-                            <td colspan="2"><h:outputText value="#{followUpSolicitacoesController.current.pedido.motivo}" rendered="#{followUpSolicitacoesController.current.pedido.motivo != null and followUpSolicitacoesController.current.pedido.motivo ne ''}" style="color: red" /></td>
-                        </tr>
+                        <h:panelGroup rendered="#{followUpSolicitacoesController.current.pedido.observacao != null and followUpSolicitacoesController.current.pedido.observacao ne ''}">
+                            <tr>
+                                <td>
+                                    <h:outputText value="#{msg.observacao}:" rendered="#{followUpSolicitacoesController.current.pedido.observacao != null and followUpSolicitacoesController.current.pedido.observacao ne ''}" />
+                                </td>
+                                <td colspan="2">
+                                    <h:outputText value="#{followUpSolicitacoesController.current.pedido.observacao}" rendered="#{followUpSolicitacoesController.current.pedido.observacao != null and followUpSolicitacoesController.current.pedido.observacao ne ''}" />
+                                </td>
+                            </tr>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{followUpSolicitacoesController.current.pedido.motivo != null and followUpSolicitacoesController.current.pedido.motivo ne ''}">
+                            <tr>
+                                <td>
+                                    <h:outputText value="#{msg.motivo}:"  />
+                                </td>
+                                <td colspan="2">
+                                    <h:outputText value="#{followUpSolicitacoesController.current.pedido.motivo}" style="color: red" />
+                                </td>
+                            </tr>
+                        </h:panelGroup>
                     </table>
                 </h:form>
             </p:dialog>
@@ -663,9 +680,9 @@
                             <p:commandButton value="" icon="filterClear" iconPos="left" actionListener="#{followUpSolicitacoesController.cleanPanelFiltros()}" rendered="#{followUpSolicitacoesController.showPanelFiltros}" update=":formMain:panelFollowUpItens" style="height: 26px; width: 30px; position: relative; float: right" />
                         </p:panel>
 
-                        <p:commandButton id="addSolicItemBtn" rendered="#{loginController.incluiSolicitacao}"     disabled="#{followUpSolicitacoesController.disableButtonSolicitacao}"      title="#{msg.novaSolicitacao}"   tabindex="2" icon="ui-icon-circle-plus"   iconPos="left" value="" styleClass="button-only-icon" update=":panelMain"  action="#{followUpSolicitacoesController.incluirItemSolicitacao(insumoController.insumosSelecionados)}"     actionListener="#{insumoController.limparInsumosSelecionados()}" />
-                        <p:commandButton id="addMEItemBtn"    rendered="#{loginController.incluiEntradaMaterial}" disabled="#{followUpSolicitacoesController.disableButtonEntradaMateriais}" title="#{msg.entradaMateriais}"  tabindex="3" icon="arrowUpGreenIco"       iconPos="left" value="" styleClass="button-only-icon" update=":panelMain"  action="#{followUpSolicitacoesController.incluirItemMaterialEntrada(insumoController.insumosSelecionados)}" actionListener="#{insumoController.limparInsumosSelecionados()}" />
-                        <p:commandButton id="addMSItemBtn"    rendered="#{loginController.incluiSaidaMaterial}"   disabled="#{followUpSolicitacoesController.disableButtonSaidaMateriais}"   title="#{msg.saidaMateriais}"    tabindex="4" icon="arrowDownOrangeIco"    iconPos="left" value="" styleClass="button-only-icon" update=":panelMain"  action="#{followUpSolicitacoesController.incluirItemMaterialSaida(insumoController.insumosSelecionados)}"   actionListener="#{insumoController.limparInsumosSelecionados()}" style="margin-right: 10px" />
+                        <p:commandButton id="addSolicItemBtn" rendered="#{loginController.incluiSolicitacao}"     disabled="#{followUpSolicitacoesController.disableButtonSolicitacao}"      title="#{msg.novaSolicitacao}"   tabindex="2" icon="ui-icon-circle-plus"   iconPos="left" value="" styleClass="button-only-icon" update=":panelMain"  action="#{followUpSolicitacoesController.prepareIncItemSolic(insumoController.insumosSelecionados)}"     actionListener="#{insumoController.limparInsumosSelecionados()}" />
+                        <p:commandButton id="addMEItemBtn"    rendered="#{loginController.incluiEntradaMaterial}" disabled="#{followUpSolicitacoesController.disableButtonEntradaMateriais}" title="#{msg.entradaMateriais}"  tabindex="3" icon="arrowUpGreenIco"       iconPos="left" value="" styleClass="button-only-icon" update=":panelMain"  action="#{followUpSolicitacoesController.prepareIncItemMatEnt(insumoController.insumosSelecionados)}" actionListener="#{insumoController.limparInsumosSelecionados()}" />
+                        <p:commandButton id="addMSItemBtn"    rendered="#{loginController.incluiSaidaMaterial}"   disabled="#{followUpSolicitacoesController.disableButtonSaidaMateriais}"   title="#{msg.saidaMateriais}"    tabindex="4" icon="arrowDownOrangeIco"    iconPos="left" value="" styleClass="button-only-icon" update=":panelMain"  action="#{followUpSolicitacoesController.prepareIncItemMatSai(insumoController.insumosSelecionados)}"   actionListener="#{insumoController.limparInsumosSelecionados()}" style="margin-right: 10px" />
 
                         <p:commandButton id="autItemBtn"      rendered="#{loginController.autorizaSolicitacao}"   disabled="#{followUpSolicitacoesController.disableButtonAutItem}"   title="#{msg.autorizaItensSolicitacao}" tabindex="5" icon="ui-icon-circle-check"  iconPos="left" value="" styleClass="button-only-icon" update="panelFollowUpItens, :panelMain"  action="#{followUpSolicitacoesController.autorizaSolicitacao()}" oncomplete="#{insumoController.limparInsumosSelecionados()}" />
                         <p:commandButton id="rejItemBtn"      rendered="#{loginController.autorizaSolicitacao}"   disabled="#{followUpSolicitacoesController.disableButtonRejItem}"   title="#{msg.rejeitaItensSolicitacao}"  tabindex="6" icon="ui-icon-circle-close"  iconPos="left" value="" styleClass="button-only-icon" oncomplete="dlgMotivoRejeitaSolicitacao.show()" />
@@ -827,8 +844,9 @@
                                 <ui:repeat value="#{followUpSolicitacoesController.items}"  var="item" varStatus="x">
                                     <tr >
                                         <td align='center'>
-                                            <h:selectBooleanCheckbox value="#{item.marcado}" rendered="true" disabled="#{!followUpSolicitacoesController.newSolicitacao or !followUpSolicitacoesController.newMovEntrada}" >
-                                                <p:ajax listener="#{followUpSolicitacoesController.addOrRemoveInsumo(item.insumoSub.id, item.marcado, item.solicitacaoCompraItem)}" update=":formMain:panelFollowUpItens" />
+                                            <h:selectBooleanCheckbox id="chkFollowupItem" value="#{item.marcado}" rendered="true" disabled="#{!followUpSolicitacoesController.newSolicitacao or !followUpSolicitacoesController.newMovEntrada}" >
+                                                <p:ajax listener="#{followUpSolicitacoesController.addOrRemoveInsumo(item.insumoSub.id, item.marcado, item.solicitacaoCompraItem)}" 
+                                                         update=":formMain:panelFollowUpItens"/>
                                             </h:selectBooleanCheckbox>
                                         </td>
                                         <td align='center'>
@@ -869,9 +887,10 @@
                                         </td>
 
                                         <td align='right'>
-                                            <h:commandButton value="#{followUpSolicitacoesController.getEstoqueAtualFmt(item.insumoSub)}" class="button-field" onmouseout="this.className = 'button-field-out'" onmousemove="this.className = 'button-field-over'" style="text-align: right;" actionListener="#{followUpSolicitacoesController.createCurrent(item, 'dlgKardex')}" >
+                                            <h:commandButton value="#{followUpSolicitacoesController.getEstoqueAtualFmt1(item)}" class="button-field" onmouseout="this.className = 'button-field-out'" onmousemove="this.className = 'button-field-over'" style="text-align: right;" actionListener="#{followUpSolicitacoesController.createCurrent(item, 'dlgKardex')}" >
                                                 <p:ajax oncomplete="dlgKardex.show()" update=":dialogForm" />
                                             </h:commandButton>
+
                                         </td>
                                         <td align='right'>
                                             <h:outputText value="#{item.estoqueUsina}" >

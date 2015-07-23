@@ -11,7 +11,6 @@ import java.io.Serializable;
  * Interface de Marcação de Entidades, se possui @Entity deve
  * implementar esta interface.
  * @param <T> Tipo da Classe que a implementa.
- * @author Guilherme
  */
 public interface EntityInterface<T> extends Comparable<T>, Serializable {
 

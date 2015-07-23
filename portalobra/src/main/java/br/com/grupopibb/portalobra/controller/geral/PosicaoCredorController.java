@@ -87,9 +87,6 @@ public class PosicaoCredorController implements Serializable {
     public void pesquisar() {
         parcelas = null;
         previsoes = null;
-        System.out.println(credor);
-        System.out.println(data);
-        System.out.println(nucleoNegocio);
     }
     
     public SelectItem[] getNucleoSelect(){

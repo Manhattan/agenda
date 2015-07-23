@@ -11,11 +11,13 @@ import br.com.grupopibb.portalobra.dao.geral.CentroCustoFacade;
 import br.com.grupopibb.portalobra.dao.insumo.InsumoSubFacade;
 import br.com.grupopibb.portalobra.dao.materiais.MateriaisEstoqueFacade;
 import br.com.grupopibb.portalobra.dao.materiais.MaterialSaidaItensFacade;
+import br.com.grupopibb.portalobra.model.followup.FollowUpSolicitacoes;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
 import br.com.grupopibb.portalobra.model.insumo.InsumoSub;
 import br.com.grupopibb.portalobra.model.materiais.MaterialSaidaItens;
 import br.com.grupopibb.portalobra.utils.DateUtils;
 import br.com.grupopibb.portalobra.utils.JsfUtil;
+import br.com.grupopibb.portalobra.utils.NumberUtils;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.persistence.NoResultException;
 
 /**
  *

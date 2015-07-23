@@ -421,6 +421,22 @@ public class FollowUpSolicitacoes implements EntityInterface<FollowUpSolicitacoe
     private Integer pedidoParcial;
     /*
      */
+    @Column(name = "Estoque_AnoMes")
+    private String estoqueAnoMes;
+    /*
+     */
+    @ManyToOne(targetEntity = MateriaisEstoque.class, fetch = FetchType.EAGER)
+    @JoinColumns({
+        @JoinColumn(name = "Empresa_Cod", referencedColumnName = "Empresa_Cod", insertable = false, updatable = false),
+        @JoinColumn(name = "Filial_Cod", referencedColumnName = "Filial_Cod", insertable = false, updatable = false),
+        @JoinColumn(name = "Centro_Cod", referencedColumnName = "Centro_Cod", insertable = false, updatable = false),
+        @JoinColumn(name = "Estoque_AnoMes", referencedColumnName = "Estoque_AnoMes", insertable = false, updatable = false),
+        @JoinColumn(name = "Insumo_Cod", referencedColumnName = "Insumo_Cod", insertable = false, updatable = false),
+        @JoinColumn(name = "SubInsumo_Cod", referencedColumnName = "SubInsumo_Cod", insertable = false, updatable = false)
+    })
+    private MateriaisEstoque materialEstoque;
+    /*
+     */
     @Transient
     private List<DocumentoEntrada> documentosEntrada;
     /*
@@ -835,6 +851,14 @@ public class FollowUpSolicitacoes implements EntityInterface<FollowUpSolicitacoe
         this.pedidoParcial = pedidoParcial;
     }
 
+    public String getEstoqueAnoMes() {
+        return estoqueAnoMes;
+    }
+
+    public void setEstoqueAnoMes(String estoqueAnoMes) {
+        this.estoqueAnoMes = estoqueAnoMes;
+    }
+
     public Long getInsumoCod() {
         return insumoCod;
     }
@@ -905,6 +929,14 @@ public class FollowUpSolicitacoes implements EntityInterface<FollowUpSolicitacoe
 
     public void setMaterialEntradaItens(List<MaterialEntradaItens> materialEntradaItens) {
         this.materialEntradaItens = materialEntradaItens;
+    }
+
+    public MateriaisEstoque getMaterialEstoque() {
+        return materialEstoque;
+    }
+
+    public void setMaterialEstoque(MateriaisEstoque materialEstoque) {
+        this.materialEstoque = materialEstoque;
     }
 
     public List<DocumentoEntrada> getDocumentosEntrada() {

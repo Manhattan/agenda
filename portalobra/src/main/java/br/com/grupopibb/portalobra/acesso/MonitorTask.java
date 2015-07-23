@@ -44,7 +44,6 @@ public class MonitorTask extends TimerTask implements Serializable {
                     monitor.setDataSaida(null);
                 }
                 monitorFacade.update(monitor);
-                System.out.println("EXECUTANDO TAREFA: " + monitor.getDataAtual());
             }
         } catch (EntityException ex) {
             Logger.getLogger(MonitorTask.class.getName()).log(Level.SEVERE, null, ex);

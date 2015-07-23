@@ -25,7 +25,6 @@ public class MonitorGeralTask extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println("EXECUTANDO TASK MONITOR GERAL..." + new Date());
         monitorFacade.atualizaMonitor();
     }
 }

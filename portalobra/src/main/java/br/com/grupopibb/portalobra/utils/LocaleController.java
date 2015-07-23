@@ -20,8 +20,6 @@ import javax.faces.model.SelectItem;
     /**
  * Manager Bean jsf responsável por gerenciar a internacionalização
  * da aplicação.
- * @author Guilherme Braga
- * @since 29/04/2012
  */
 @ManagedBean
 @SessionScoped

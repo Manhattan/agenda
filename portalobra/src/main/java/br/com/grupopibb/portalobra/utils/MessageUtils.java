@@ -12,11 +12,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- *
- * @since 29/04/2012
- * @author Guilherme
- */
 public final class MessageUtils {
 
     /**

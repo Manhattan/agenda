@@ -7,7 +7,7 @@
                 xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
                 >
     <f:subview id="svwPosCred">
-        <p:dialog id="dlgPosCred" header="#{msg.posicaoCredor}" widgetVar="dlgPosCred" style="position: absolute; float: top" position="left" closeOnEscape="true" resizable="false" >
+        <p:dialog id="dlgPosCred" header="#{msg.posicaoCredor}: #{posicaoCredorController.credor.razaoSocial}" widgetVar="dlgPosCred" style="position: absolute; float: top" position="left" closeOnEscape="true" resizable="false" >
             <h:form id="frmPosCred">
                 <h:panelGrid columns="5" style="text-align: left">
                     <h:outputText value="#{msg.empresa}:" style="font-weight: bold" />
@@ -18,7 +18,7 @@
 
                     <p:selectOneMenu value="#{posicaoCredorController.empresa}" filter="true" filterMatchMode="contains">
                         <f:selectItem itemLabel="" itemValue="#{null}" />
-                        <f:selectItems value="#{funcionarioController.empresaSelect}" />
+                        <f:selectItems value="#{funcionarioController.empresaSelect}" var="emp" itemLabel="#{emp.label}" />
                         <f:converter converterId="empresaConverter" />
                     </p:selectOneMenu>
 
@@ -32,10 +32,10 @@
                                  onkeypress="AtalhoData(event, this)" onchange="AtualizaData(this)"
                                  title="#{msg.dataInicial}" pattern="dd/MM/yyyy" pagedate="utilsController.getDate()" locale="pt" mode="popup"
                                  navigator="true" immediate="true"
-                                 timeZone="#{initParam['timezone']}" >
+                                 timeZone="#{initParam['timezone']}">
                     </p:calendar>
 
-                    <h:outputText value="#{posicaoCredorController.credor.razaoSocial}" />
+                    <h:outputText style="color: #1e4f8a; font-weight: bold; font-size: 110%; margin-right: 10px" value="#{posicaoCredorController.credor.razaoSocial}" />
 
                     <p:commandButton value="#{msg.executar}" actionListener="#{posicaoCredorController.pesquisar()}" update=":menuApp:svwPosCred:frmPosCred" />
 

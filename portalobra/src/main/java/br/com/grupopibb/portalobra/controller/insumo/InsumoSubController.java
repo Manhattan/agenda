@@ -250,7 +250,6 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
 
     public void addOrRemoveInsumo(Long insumoCod, Integer insumoSubCod, boolean marcado) {
         String codigoInsumo = insumoCod + "_" + insumoSubCod;
-        projPlanFacade.findProjetoCod(loginController.getCentroSelecionado());
         if (insumosSelecionados == null) {
             insumosSelecionados = new ArrayList<>();
         }
@@ -271,7 +270,6 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public SelectItem[] getInsumoGrupoSelect() {
-
         if (filtroClasseInsumo == null) {
             filtroClasseInsumo = new ClasseInsumos();
         }
@@ -280,7 +278,6 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
             grupo = new ArrayList<>();
         }
         insumoGrupoSelect = JsfUtil.getSelectItems(grupo, false, FacesContext.getCurrentInstance());
-
         return insumoGrupoSelect;
     }
 
@@ -295,10 +292,8 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
         if (filtroGrupoInsumo == null) {
             filtroGrupoInsumo = new GrupoInsumos();
         }
-
         String classeCod = filtroClasseInsumo.getCodigo() == null ? "" : filtroClasseInsumo.getCodigo();
         String grupoCod = filtroGrupoInsumo.getCodigo() == null ? "" : filtroGrupoInsumo.getCodigo();
-
         List<CaracterizacaoInsumos> caracterizacao = caracterizacaoInsumosFacade.findParam(grupoCod, classeCod);
         if (caracterizacao == null) {
             caracterizacao = new ArrayList<>();

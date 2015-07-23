@@ -66,7 +66,7 @@ public class Empresa implements EntityInterface<Empresa> {
 
     @Override
     public String getLabel() {
-        return codigo;
+        return codigo + " - " + nome;
     }
 
     @Override

@@ -25,7 +25,6 @@ public class AppController {
     
     @PostConstruct
     public void init(){
-        System.out.println("INICIANDO APLICACAO EM: " + new Date());
         monitorScheduler.initMonitorGeral();
     }
     

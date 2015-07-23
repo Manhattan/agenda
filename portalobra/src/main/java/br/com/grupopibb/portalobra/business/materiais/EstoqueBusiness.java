@@ -99,7 +99,6 @@ public class EstoqueBusiness {
             q.executeUpdate();
             q = null;
         } catch (RuntimeException e) {
-            System.out.println(e);
         }
     }
 

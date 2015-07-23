@@ -310,7 +310,6 @@ public class OrcamentoBusiness {
                         }
                         for (SolicitacaoCompraItemOrcPlan itemPlan : solicItem.getItensPlanoOrcamento()) {
                             if (itemPlan.getCompareId().equals(((SolicitacaoCompraItemOrcPlan) item.getData()).getCompareId())) {
-                                System.out.println("Valor solicitado: " + ((SolicitacaoCompraItemOrcPlan) item.getData()).getValorSolic());
                                 int i = getIndexItemPlan(solicItem.getItensPlanoOrcamento(), itemPlan);
                                 solicItem.getItensPlanoOrcamento().set(i, (SolicitacaoCompraItemOrcPlan) item.getData());
                             }

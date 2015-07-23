@@ -16,8 +16,8 @@
                             <tr class="cabecalhoDiscreto">
                                 <th align='center'>
                                     <p:commandButton value="" icon="ui-icon-search" styleClass="button-only-icon" update="panelTableInsumosPaginador" 
-                                                     actionListener="#{insumoSubController.pesquisar()}" style="margin-bottom: 5px;" />
-                                    <p:commandButton value="" icon="ui-icon-circle-plus" styleClass="button-only-icon" update=":panelMain" 
+                                                     actionListener="#{insumoSubController.pesquisar()}" style="margin-bottom: 5px; height: 23px" />
+                                    <p:commandButton value="#{msg.incluir}" icon="ui-icon-circle-plus" style="width: 70px" update=":panelMain" 
                                                      actionListener="#{followUpSolicitacoesController.incluirItem(insumoSubController.insumosSelecionados)}"
                                                      action="#{insumoSubController.limparInsumosSelecionados()}"
                                                      oncomplete="dlgNovoInsumoSub.hide()"/>
@@ -68,7 +68,13 @@
                             <ui:repeat value="#{insumoSubController.items}" var="inss" varStatus="s">
                                 <tr>
                                     <td valign='middle' align='center'>
-                                        <p:commandButton value="" icon="ui-icon-cart" iconPos="left" styleClass="button-only-icon" actionListener="#{documentoEntradaItemController.initInsumo(inss.insumo)}" oncomplete="dlgUltSolic.show()" update=":menuApp:form-consulta-insumoSub:pngUltSolicInclude"  />
+                                        <p:commandButton value="" icon="ui-icon-circle-plus" styleClass="button-only-icon" update=":panelMain" 
+                                                         actionListener="#{followUpSolicitacoesController.addOrRemoveInsumo(inss)}"
+                                                         action="#{insumoSubController.limparInsumosSelecionados()}"
+                                                         oncomplete="dlgNovoInsumoSub.hide()"/>
+                                        <p:commandButton value="" icon="ui-icon-cart" iconPos="left" styleClass="button-only-icon" style="margin-right: 5px"
+                                                         actionListener="#{documentoEntradaItemController.initInsumo(inss.insumo)}" 
+                                                         oncomplete="dlgUltSolic.show()" update=":menuApp:form-consulta-insumoSub:pngUltSolicInclude"  />
                                         <h:selectBooleanCheckbox rendered="true" disabled="false" value="#{inss.marcado}" >
                                             <p:ajax listener="#{insumoSubController.addOrRemoveInsumo(inss.insumoCod, inss.codigo, inss.marcado)}" />  
                                         </h:selectBooleanCheckbox>

@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,8 +23,12 @@ import javax.persistence.TemporalType;
  * @author administrator
  */
 @Entity
-@Table(name = "Pedido_Autorizacoes") 
-public class PedidoAutorizacoes implements EntityInterface<PedidoAutorizacoes>{
+@Table(name = "Pedido_Autorizacoes")
+@NamedQuery(name = "PedidoAutorizacoes.findNotEmpty",
+        query = " SELECT DISTINCT pa FROM PedidoAutorizacoes pa "
+        + " WHERE ( pa.instrucao <> '' )"
+        + " AND ( pa.pedido = :pedido ) ")
+public class PedidoAutorizacoes implements EntityInterface<PedidoAutorizacoes> {
 
     @Id
     @ManyToOne(targetEntity = Pedido.class, fetch = FetchType.EAGER)
@@ -32,20 +37,20 @@ public class PedidoAutorizacoes implements EntityInterface<PedidoAutorizacoes>{
     /*
      */
     @Id
-    @Column(name="Usuario_Instrucao")
+    @Column(name = "Usuario_Instrucao")
     private String usuario;
     /*
      */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="Instrucao_Data")
+    @Column(name = "Instrucao_Data")
     private Date data;
     /*
      */
-    @Column(name="Instrucao_Motivo")
+    @Column(name = "Instrucao_Motivo")
     private String motivo;
     /*
      */
-    @Column(name="Instrucao_Cod")
+    @Column(name = "Instrucao_Cod")
     private String instrucao;
     /*
      */
@@ -127,6 +132,4 @@ public class PedidoAutorizacoes implements EntityInterface<PedidoAutorizacoes>{
     public void setInstrucao(String instrucao) {
         this.instrucao = instrucao;
     }
-    
-    
 }

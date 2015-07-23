@@ -35,8 +35,6 @@ import org.apache.log4j.Logger;
  * @param <T> T Classe de Entidade.
  * @param <ID> ID O tipo de ID da classe de entidade, um Long, Integer,
  * IdServidor...
- * @author Guilherme Braga
- * @since 2012/02/20
  */
 //@RolesAllowed({"admin", "conveniada", "credenciada", "financeiro", "fornecedor", "operacional", "user", "sys"})
 public abstract class AbstractEntityBeans<T extends EntityInterface, ID extends Serializable> {

@@ -24,30 +24,58 @@ public class QualidadeController implements Serializable {
     private QualidadeBusiness qualidadeBusiness;
 
     public DocumentoEntradaAvaliacao getPontualidade(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getPontualidade(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getPontualidade(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public DocumentoEntradaAvaliacao getEspecPedido(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getEspecPedido(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getEspecPedido(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public DocumentoEntradaAvaliacao getQualidadeIntegridade(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getQualidadeIntegridade(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getQualidadeIntegridade(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public DocumentoEntradaAvaliacao getDadosNf(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getDadosNf(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getDadosNf(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public DocumentoEntradaAvaliacao getQualidadeIntrinseca(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getQualidadeIntrinseca(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getQualidadeIntrinseca(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public DocumentoEntradaAvaliacao getRequisitosComerciais(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getRequisitosComerciais(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getRequisitosComerciais(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public DocumentoEntradaAvaliacao getRequisitosSgq(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
-        return qualidadeBusiness.getRequisitosSgq(itensAvaliacao);
+        try {
+            return qualidadeBusiness.getRequisitosSgq(itensAvaliacao);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 }

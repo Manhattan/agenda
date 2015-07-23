@@ -10,9 +10,6 @@ import javax.ejb.ApplicationException;
  * Classe que representa um erros de negócio, quando algo não estiver da forma
  * que se espera o método do bean EJB irá lançar essa exceção com seus
  * atributos informando o que está incorreto.
- *
- * @since 2012/02/22
- * @author Guilherme
  */
 @ApplicationException(rollback = true)
 public class BusinessException extends Exception {

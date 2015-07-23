@@ -4,7 +4,6 @@ import javax.faces.model.DataModel;
 
 /**
  *  Classe utilitária para paginação em tabelas.
- * @author Guilherme
  */
 public abstract class EntityPagination {
 
