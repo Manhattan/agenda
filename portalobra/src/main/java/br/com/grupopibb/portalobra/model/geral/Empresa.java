@@ -31,6 +31,7 @@ public class Empresa implements EntityInterface<Empresa> {
     @Size(min = 1, max = 100)
     @Column(name = "Empresa_Nome", nullable = false)
     private String nome;
+    
     /*
     @Size(max = 6)
     @Column(name = "Empresa_CtbMesAnoIni")
@@ -44,8 +45,8 @@ public class Empresa implements EntityInterface<Empresa> {
     @JoinColumn(name="Cre_Cod")
     private Credor credor;
  
- private String logomarca;
-  private String logomarcaClasse;
+    private String logomarca;
+    private String logomarcaClasse;
   
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="CTB_DataLimite")
@@ -59,6 +60,7 @@ public class Empresa implements EntityInterface<Empresa> {
     @Column(name="Conta_Fornecedor")
     private String contaFornecedor;
  */
+    
     @Override
     public Serializable getId() {
         return codigo;

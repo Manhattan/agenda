@@ -203,4 +203,10 @@ public class InsumoSub implements EntityInterface<InsumoSub> {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return insumoCod + "-" + codigo + " - " + especificacao;
+    }
+    
 }

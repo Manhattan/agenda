@@ -8,6 +8,7 @@ import br.com.grupopibb.portalobra.dao.commons.AbstractEntityBeans;
 import static br.com.grupopibb.portalobra.dao.commons.AbstractEntityBeans.getMapParams;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
 import br.com.grupopibb.portalobra.utils.UtilBeans;
+import java.util.List;
 import java.util.Map;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -46,6 +47,20 @@ public class CentroCustoFacade extends AbstractEntityBeans<CentroCusto, String> 
         paramsPaginacao1(params, empresaCodigo);
         return pesqParam("CentroCusto.findByEmpresaCodigo", params);
     }
+    
+    public List<CentroCusto> findCentrosWithPedidosByForn(final String cpfCnpj) {
+        Map<String, Object> params = getMapParams();
+        paramsPedidoFornecedor(params, cpfCnpj);
+        return listPesqParam("CentroCusto.findCentrosWithPedidosByForn", params);
+    }
+    
+    public List<CentroCusto> findNames(){
+        
+        return (List<CentroCusto>) pesqParam("CentroCusto.Nome");
+        
+    }
+    
+    
 
   /*  @Override
     public List<CentroCusto> findAll() {
@@ -68,4 +83,9 @@ public class CentroCustoFacade extends AbstractEntityBeans<CentroCusto, String> 
     private void paramsPaginacao1(Map<String, Object> params, final String empresaCodigo) {
         params.put("empresaCodigo", empresaCodigo);
     }
+    
+    private void paramsPedidoFornecedor(Map<String, Object> params, final String cpfCnpj){
+        params.put("cpfCnpj", cpfCnpj);
+    }
+    
 }

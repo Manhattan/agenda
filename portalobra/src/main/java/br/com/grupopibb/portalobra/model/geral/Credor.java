@@ -5,6 +5,7 @@
 package br.com.grupopibb.portalobra.model.geral;
 
 import br.com.grupopibb.portalobra.model.common.EntityInterface;
+import br.com.grupopibb.portalobra.model.pedido.Pedido;
 import br.com.grupopibb.portalobra.model.tipos.EnumNatureza;
 import br.com.grupopibb.portalobra.model.tipos.EnumPais;
 import br.com.grupopibb.portalobra.utils.NumberUtils;
@@ -37,8 +38,8 @@ import org.apache.commons.lang3.StringUtils;
  * @author tone.lima
  */
 @Entity
-@Table(name = "Credor")
-@NamedQueries({
+        @Table(name = "Credor")
+        @NamedQueries({
     @NamedQuery(name = "Credor.selectRange",
             query = " SELECT DISTINCT c FROM Credor c "
             + " WHERE (:codigo2 = 'todos' OR c.codigo LIKE :codigo) "
@@ -56,7 +57,12 @@ import org.apache.commons.lang3.StringUtils;
             + " AND (:razaoSocial2 = 'todos' OR c.razaoSocial LIKE :razaoSocial) "
             + " AND (:cidade2 = 'todos' OR c.cidade LIKE :cidade) "
             + " AND (:estado2 = 'todos' OR c.uf = :estado) "
-            + " AND (:semEspecificidade = 'todos' OR c.especieAvaliacao is null) ")
+            + " AND (:semEspecificidade = 'todos' OR c.especieAvaliacao is null) "),
+    @NamedQuery(name = "Credor.findCredorInnerPedido", query = " SELECT c FROM Credor c INNER JOIN c.pedido p "
+            + " WHERE p.centroCusto.codigo = :centro_cod "
+            + " AND p.centroCusto.empresaCod = :empresa_cod "
+            + " AND p.centroCusto.filialCod = :filtro_cod "
+            + " AND c.cpfCnpj = :cpfcnpj ")
 })
 public class Credor implements EntityInterface<Credor> {
 
@@ -81,6 +87,8 @@ public class Credor implements EntityInterface<Credor> {
     private String nomeFantasia;
     /*
      */
+    @OneToMany(targetEntity = Pedido.class, mappedBy = "credor")
+    private List<Pedido> pedido;
     @Size(max = 14)
     @Column(name = "Cre_CGCCPF", nullable = false)
     private String cpfCnpj;
@@ -192,10 +200,10 @@ public class Credor implements EntityInterface<Credor> {
         }
         return this.endereco;
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getEnderecoNumEComp() {
         String endNumEComp = this.endereco;
@@ -352,9 +360,21 @@ public class Credor implements EntityInterface<Credor> {
         this.marcado = marcado;
     }
 
+    public List<Pedido> getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(List<Pedido> pedido) {
+        this.pedido = pedido;
+    }
+
     @Override
     public Serializable getId() {
         return codigo;
+    }
+    
+    public String getLabelReport() {
+        return codigo + " - " + razaoSocial;
     }
 
     @Override
@@ -374,7 +394,7 @@ public class Credor implements EntityInterface<Credor> {
 
     @Override
     public int compareTo(Credor o) {
-        return this.codigo.compareTo(o.getCodigo());
+        return this.getCodigo().compareTo(o.getCodigo());
     }
 
     @Override

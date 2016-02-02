@@ -60,4 +60,6 @@ public class QualidadeBusiness {
     public DocumentoEntradaAvaliacao getRequisitosSgq(List<DocumentoEntradaAvaliacao> itensAvaliacao) {
         return findItemAvalByCodigo(itensAvaliacao, 5911);
     }
+
+   
 }

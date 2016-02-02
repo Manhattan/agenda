@@ -11,7 +11,6 @@ import br.com.grupopibb.portalobra.dao.followup.FollowUpSolicitacoesFacade;
 import br.com.grupopibb.portalobra.dao.insumo.CaracterizacaoInsumosFacade;
 import br.com.grupopibb.portalobra.dao.insumo.ClasseInsumosFacade;
 import br.com.grupopibb.portalobra.dao.insumo.GrupoInsumosFacade;
-import br.com.grupopibb.portalobra.dao.insumo.InsumoFacade;
 import br.com.grupopibb.portalobra.dao.insumo.InsumoSubFacade;
 import br.com.grupopibb.portalobra.dao.projeto.ProjetoPlanejamentoFacade;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
@@ -20,10 +19,13 @@ import br.com.grupopibb.portalobra.model.insumo.ClasseInsumos;
 import br.com.grupopibb.portalobra.model.insumo.GrupoInsumos;
 import br.com.grupopibb.portalobra.model.insumo.Insumo;
 import br.com.grupopibb.portalobra.model.insumo.InsumoSub;
+import br.com.grupopibb.portalobra.model.solicitacaocompra.SolicitacaoCompraItem;
 import br.com.grupopibb.portalobra.utils.JsfUtil;
 import br.com.grupopibb.portalobra.utils.NumberUtils;
+import br.com.grupopibb.portalobra.utils.ReportUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -43,6 +45,8 @@ import javax.faces.model.SelectItem;
 @ManagedBean
 @ViewScoped
 public class InsumoSubController extends EntityController<InsumoSub> implements Serializable {
+    @EJB
+    private ReportUtil reportUtil;
 
     @EJB
     private InsumoSubFacade insumoSubFacade;
@@ -69,6 +73,7 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     private SelectItem[] insumoCaracterizacaoSelect;
     //----------------------------------------------
     private List<String> insumosSelecionados;
+    private List<SolicitacaoCompraItem> solicItemSelecionados;
     //---------------------------------------------------
     private InsumoSub current;
     private boolean obraLinkadaOrcamento = false;
@@ -78,10 +83,34 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     //----------------------------------------------
     @ManagedProperty(value = "#{loginController}")
     private LoginController loginController;
+    
+    private boolean enableBtnDialogUltimaSolic = false;
 
+    //-----------------------------------------------------------
+    private Date dataParametro;
+
+    public Date getDataParametro() {
+        return dataParametro;
+    }
+
+    public void setDataParametro(Date dataParametro) {
+        this.dataParametro = dataParametro;
+    }
+    
+    
+    
     public void setLoginController(LoginController loginContronller) {
         this.loginController = loginContronller;
     }
+
+    public boolean isEnableBtnDialogUltimaSolic() {
+        return enableBtnDialogUltimaSolic;
+    }
+
+    public void setEnableBtnDialogUltimaSolic(boolean enableBtnDialogUltimaSolic) {
+        this.enableBtnDialogUltimaSolic = enableBtnDialogUltimaSolic;
+    }
+    
 
     /**
      * Executado após o bean JSF ser criado.
@@ -133,6 +162,16 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     public boolean isDesconsideraLinkOrcamento() {
         return desconsideraLinkOrcamento;
     }
+    
+    public void verifyCentroIsNull(CentroCusto centro){
+        
+        if(centro != null){
+            this.setEnableBtnDialogUltimaSolic(true);
+        }else{
+            this.setEnableBtnDialogUltimaSolic(false);
+        }
+        
+    }
 
     /**
      * Pesquisa o valor orçado a realizar de um determinado insumo em um centro
@@ -177,9 +216,6 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
         }
     }
 
-    /**
-     *
-     */
     public void desconsiderarLinkOrcamento() {
         this.desconsideraLinkOrcamento = true;
     }
@@ -223,12 +259,14 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
         return pagination;
     }
 
-    public void limparInsumos() {
+    public String limparInsumos() {
         limparIncluirItem();
+        return JsfUtil.MANTEM;
     }
 
     private void limparIncluirItem() {
         limparInsumosSelecionados();
+        solicItemSelecionados = null;
         filtroCaracInsumo = null;
         filtroGrupoInsumo = null;
         filtroClasseInsumo = null;
@@ -236,9 +274,10 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
         filtroSolicInsumoEspec = "";
     }
 
-    public void limparInsumosSelecionados() {
+    public String limparInsumosSelecionados() {
         insumosSelecionados = null;
         recreateTable();
+        return JsfUtil.MANTEM;
     }
 
     /**
@@ -250,9 +289,7 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
 
     public void addOrRemoveInsumo(Long insumoCod, Integer insumoSubCod, boolean marcado) {
         String codigoInsumo = insumoCod + "_" + insumoSubCod;
-        if (insumosSelecionados == null) {
-            insumosSelecionados = new ArrayList<>();
-        }
+        insumosSelecionados = insumosSelecionados == null ? new ArrayList<String>() : insumosSelecionados;
         if (marcado) {
             insumosSelecionados.add(codigoInsumo);
         } else {
@@ -260,6 +297,34 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
         }
     }
 
+    /**
+     * Inclui o Insumo para solicitacao de compra e movimentação de materiais.
+     * Também inclui a lista de itens solicitados a serem autorizados ou
+     * rejeitados.
+     *
+     * @param codigoInsumo
+     * @param marcado
+     * @param solicitacaoCompra
+     * @param solicItemNumero
+     */
+    public void addOrRemoveInsumoF(String subInsumoId, boolean marcado, SolicitacaoCompraItem solicItem) {
+        insumosSelecionados = insumosSelecionados == null ? new ArrayList<String>() : insumosSelecionados;
+        solicItemSelecionados = solicItemSelecionados == null ? new ArrayList<SolicitacaoCompraItem>() : solicItemSelecionados;
+        if (marcado) {
+            solicItemSelecionados.add(solicItem);
+            insumosSelecionados.add(subInsumoId);
+        } else {
+            solicItemSelecionados.remove(solicItem);
+            insumosSelecionados.remove(subInsumoId);
+        }
+    }
+
+    public boolean isHasSolicItemSelecionados() {
+        return solicItemSelecionados != null && !solicItemSelecionados.isEmpty();
+    }
+
+    
+    
     public SelectItem[] getInsumoClasseSelect() {
         insumoClasseSelect = JsfUtil.getSelectItems(classeInsumosFacade.findAll(), false, FacesContext.getCurrentInstance());
         return insumoClasseSelect;
@@ -270,15 +335,15 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public SelectItem[] getInsumoGrupoSelect() {
-        if (filtroClasseInsumo == null) {
-            filtroClasseInsumo = new ClasseInsumos();
+        try {
+            filtroClasseInsumo = filtroClasseInsumo == null ? new ClasseInsumos() : filtroClasseInsumo;
+            List<GrupoInsumos> grupo = grupoInsumosFacade.findByClasse(filtroClasseInsumo.getCodigo());
+            grupo = grupo == null ? new ArrayList<GrupoInsumos>() : grupo;
+            insumoGrupoSelect = JsfUtil.getSelectItems(grupo, false, FacesContext.getCurrentInstance());
+            return insumoGrupoSelect;
+        } catch (NullPointerException e) {
+            return new SelectItem[0];
         }
-        List<GrupoInsumos> grupo = grupoInsumosFacade.findByClasse(filtroClasseInsumo.getCodigo());
-        if (grupo == null) {
-            grupo = new ArrayList<>();
-        }
-        insumoGrupoSelect = JsfUtil.getSelectItems(grupo, false, FacesContext.getCurrentInstance());
-        return insumoGrupoSelect;
     }
 
     public void setInsumoGrupoSelect(SelectItem[] insumoGrupoSelect) {
@@ -286,20 +351,18 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public SelectItem[] getInsumoCaracterizacaoSelect() {
-        if (filtroClasseInsumo == null) {
-            filtroClasseInsumo = new ClasseInsumos();
+        try {
+            filtroClasseInsumo = filtroClasseInsumo == null ? new ClasseInsumos() : filtroClasseInsumo;
+            filtroGrupoInsumo = filtroGrupoInsumo == null ? new GrupoInsumos() : filtroGrupoInsumo;
+            String classeCod = filtroClasseInsumo.getCodigo() == null ? "" : filtroClasseInsumo.getCodigo();
+            String grupoCod = filtroGrupoInsumo.getCodigo() == null ? "" : filtroGrupoInsumo.getCodigo();
+            List<CaracterizacaoInsumos> caracterizacao = caracterizacaoInsumosFacade.findParam(grupoCod, classeCod);
+            caracterizacao = caracterizacao == null ? new ArrayList<CaracterizacaoInsumos>() : caracterizacao;
+            insumoCaracterizacaoSelect = JsfUtil.getSelectItems(caracterizacao, false, FacesContext.getCurrentInstance());
+            return insumoCaracterizacaoSelect;
+        } catch (NullPointerException e) {
+            return new SelectItem[0];
         }
-        if (filtroGrupoInsumo == null) {
-            filtroGrupoInsumo = new GrupoInsumos();
-        }
-        String classeCod = filtroClasseInsumo.getCodigo() == null ? "" : filtroClasseInsumo.getCodigo();
-        String grupoCod = filtroGrupoInsumo.getCodigo() == null ? "" : filtroGrupoInsumo.getCodigo();
-        List<CaracterizacaoInsumos> caracterizacao = caracterizacaoInsumosFacade.findParam(grupoCod, classeCod);
-        if (caracterizacao == null) {
-            caracterizacao = new ArrayList<>();
-        }
-        insumoCaracterizacaoSelect = JsfUtil.getSelectItems(caracterizacao, false, FacesContext.getCurrentInstance());
-        return insumoCaracterizacaoSelect;
     }
 
     public void setInsumoCaracterizacaoSelect(SelectItem[] insumoCaracterizacaoSelect) {
@@ -339,9 +402,7 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public ClasseInsumos getFiltroClasseInsumo() {
-        if (filtroClasseInsumo == null) {
-            filtroClasseInsumo = new ClasseInsumos().initClasse("", "");
-        }
+        filtroClasseInsumo = filtroClasseInsumo == null ? new ClasseInsumos().initClasse("", "") : filtroClasseInsumo;
         return filtroClasseInsumo;
     }
 
@@ -350,9 +411,7 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public GrupoInsumos getFiltroGrupoInsumo() {
-        if (filtroGrupoInsumo == null) {
-            filtroGrupoInsumo = new GrupoInsumos().initClasse("", "", "");
-        }
+        filtroGrupoInsumo = filtroGrupoInsumo == null ? new GrupoInsumos().initClasse("", "", "") : filtroGrupoInsumo;
         return filtroGrupoInsumo;
     }
 
@@ -361,9 +420,7 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public CaracterizacaoInsumos getFiltroCaracInsumo() {
-        if (filtroCaracInsumo == null) {
-            filtroCaracInsumo = new CaracterizacaoInsumos().initClasse("", "", "", "");
-        }
+        filtroCaracInsumo = filtroCaracInsumo == null ? new CaracterizacaoInsumos().initClasse("", "", "", "") : filtroCaracInsumo;
         return filtroCaracInsumo;
     }
 
@@ -372,14 +429,12 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
     }
 
     public List<String> getInsumosSelecionados() {
-        if (insumosSelecionados == null) {
-            insumosSelecionados = new ArrayList<>();
-        }
-        return insumosSelecionados;
+        return insumosSelecionados == null ? new ArrayList<String>() : insumosSelecionados;
     }
 
-    public void setInsumosSelecionados(List<String> insumosSelecionados) {
+    public void setInsumosSelecionados(List<String> insumosSelecionados, List<SolicitacaoCompraItem> solicItemSelecionados) {
         this.insumosSelecionados = insumosSelecionados;
+        this.solicItemSelecionados = solicItemSelecionados;
     }
 
     public InsumoSub getCurrent() {
@@ -388,5 +443,33 @@ public class InsumoSubController extends EntityController<InsumoSub> implements 
 
     public void setCurrent(InsumoSub current) {
         this.current = current;
+    }
+
+    public List<SolicitacaoCompraItem> getSolicItemSelecionados() {
+        return solicItemSelecionados;
+    }
+
+    public void setSolicItemSelecionados(List<SolicitacaoCompraItem> solicItemSelecionados) {
+        this.solicItemSelecionados = solicItemSelecionados;
+    }
+    
+    /**
+     * Gera Relatório em PDF e exporta para o navegador
+     * @param insSub recebe um InsumoSub e acessa seu codigo usando getInsumoCod().toString()
+     * @param centCusto objeto centro contendo suas chaves compostas
+     */
+    public void generateReportInsumo(InsumoSub insSub, CentroCusto centCusto){
+        reportUtil.abrirRelatorioUltimasSolicitacoes(current.getInsumoCod().toString(), centCusto);
+    }
+    
+   
+    
+    /**
+     * Gera Relatório em Excel e exporta como download
+     * @param insSub recebe um InsumoSub e acessa seu codigo usando getInsumoCod().toString()
+     * @param centCusto objeto centro contendo suas chaves compostas
+     */
+    public void generateExcelInsumo(InsumoSub insSub, CentroCusto centCusto){
+        reportUtil.exportReportExcel(current.getInsumoCod().toString(), centCusto);
     }
 }

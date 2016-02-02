@@ -4,6 +4,7 @@
  */
 package br.com.grupopibb.portalobra.business.materiais;
 
+import br.com.grupopibb.portalobra.dao.followup.FollowUpSolicitacoesFacade;
 import br.com.grupopibb.portalobra.dao.materiais.MateriaisEstoqueFacade;
 import br.com.grupopibb.portalobra.dao.materiais.MaterialEntradaItensFacade;
 import br.com.grupopibb.portalobra.dao.materiais.MaterialSaidaItensFacade;
@@ -50,7 +51,6 @@ public class EstoqueBusiness {
     protected EntityManager getEntityManager() {
         return em;
     }
-
 
     /**
      * Atualiza os dados de estoque que são exibidos no FollowUp.
@@ -157,27 +157,42 @@ public class EstoqueBusiness {
 
     public List<MaterialEntradasESaidas> mountEntradasESaidas(List<MaterialEntradaItens> entradas, List<MaterialSaidaItens> saidas) {
         List<MaterialEntradasESaidas> materiais = new ArrayList();
-        for (MaterialEntradaItens mat : entradas) {
-            materiais.add(new MaterialEntradasESaidas(mat.getDataEntrada(), "E", mat.getMaterialEntrada().getTipoMovimento().name(), mat.getMaterialEntrada().getTipoDocumento(), mat.getMaterialEntrada().getNumeroDocumento(), mat.getMaterialEntrada().getNumeroEntrada(), mat.getItemItem(), mat.getQuantidade()));
+        try {
+            for (MaterialEntradaItens mat : entradas) {
+                materiais.add(new MaterialEntradasESaidas(mat.getDataEntrada(), "E", mat.getMaterialEntrada().getTipoMovimento().name(), mat.getMaterialEntrada().getTipoDocumento(), mat.getMaterialEntrada().getNumeroDocumento(), mat.getMaterialEntrada().getNumeroEntrada(), mat.getItemItem(), mat.getQuantidade()));
+            }
+            for (MaterialSaidaItens mat : saidas) {
+                materiais.add(new MaterialEntradasESaidas(mat.getDataSaida(), "S", mat.getMaterialSaida().getTipoMovimento(), mat.getMaterialSaida().getTipoDocumento(), mat.getMaterialSaida().getNumeroDocumento(), mat.getMaterialSaida().getNumeroSaida(), mat.getItemItem(), mat.getQuantidade()));
+            }
+            Collections.sort(materiais);
+        } catch (NullPointerException e) {
         }
-        for (MaterialSaidaItens mat : saidas) {
-            materiais.add(new MaterialEntradasESaidas(mat.getDataSaida(), "S", mat.getMaterialSaida().getTipoMovimento(), mat.getMaterialSaida().getTipoDocumento(), mat.getMaterialSaida().getNumeroDocumento(), mat.getMaterialSaida().getNumeroSaida(), mat.getItemItem(), mat.getQuantidade()));
-        }
-        Collections.sort(materiais);
         return materiais;
     }
 
-    public void mountKardex(MateriaisEstoque current, Date refDate) {
-        String dataSaldoInicial = DateUtils.getYearMonth(DateUtils.incrementar(refDate, -1, Calendar.MONTH));
-        String dataSaldoFinal = DateUtils.getYearMonth(refDate);
-        current.setSaldoInicial(materiaisEstoqueFacade.findSaldo(current.getCentro(), current.getInsumoSub(), dataSaldoInicial));
-        current.setSaldoFinal(materiaisEstoqueFacade.findSaldo(current.getCentro(), current.getInsumoSub(), dataSaldoFinal));
-        current.setMaterialEntradaItens(materialEntradaItensFacade.findParam(current.getCentro().getEmpresaCod(), current.getCentro().getFilialCod(), current.getCentro().getCodigo(), current.getInsumoSub(), refDate));
-        current.setMaterialSaidaItens(materialSaidaItensFacade.findParam(current.getCentro().getEmpresaCod(), current.getCentro().getFilialCod(), current.getCentro().getCodigo(), current.getInsumoSub(), refDate));
-        current.setMaterialEntradasESaidas(mountEntradasESaidas(current.getMaterialEntradaItens(), current.getMaterialSaidaItens()));
-        current.getMaterialEntradaItens().clear();
-        current.getMaterialSaidaItens().clear();
-        current.setMaterialEntradaItens(null);
-        current.setMaterialSaidaItens(null);
+    public List<MaterialEntradasESaidas> mountEntradasESaidas(CentroCusto centro, InsumoSub insumoSub, Date dataRef) {
+        return null;
+    }
+
+    public MateriaisEstoque mountKardex(MateriaisEstoque current, Date refDate, CentroCusto centro, InsumoSub insumoSub) {
+        try {
+            materialSaidaItensFacade.clearCache();
+            materialEntradaItensFacade.clearCache();
+            materiaisEstoqueFacade.clearCache();
+            current = new MateriaisEstoque(insumoSub, centro);
+            String dataSaldoInicial = DateUtils.getYearMonth(DateUtils.incrementar(refDate, -1, Calendar.MONTH));
+            String dataSaldoFinal = DateUtils.getYearMonth(refDate);
+            current.setSaldoInicial(materiaisEstoqueFacade.findSaldo(centro, insumoSub, dataSaldoInicial));
+            current.setSaldoFinal(materiaisEstoqueFacade.findSaldo(centro, insumoSub, dataSaldoFinal));
+            current.setMaterialEntradaItens(materialEntradaItensFacade.findParam(centro.getEmpresaCod(), centro.getFilialCod(), centro.getCodigo(), insumoSub, refDate));
+            current.setMaterialSaidaItens(materialSaidaItensFacade.findParam(centro.getEmpresaCod(), centro.getFilialCod(), centro.getCodigo(), insumoSub, refDate));
+            current.setMaterialEntradasESaidas(mountEntradasESaidas(current.getMaterialEntradaItens(), current.getMaterialSaidaItens()));
+            current.getMaterialEntradaItens().clear();
+            current.getMaterialSaidaItens().clear();
+            current.setMaterialEntradaItens(null);
+            current.setMaterialSaidaItens(null);
+        } catch (NullPointerException e) {
+        }
+        return current;
     }
 }

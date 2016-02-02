@@ -47,7 +47,7 @@
 
                 <h:panelGroup>
                     <p:inputText value="#{documentoEntradaController.credor}" style="width: 173px" />
-                    <p:commandButton id="findCredorBtn" title="#{msg.fornecedor}" icon="ui-icon-search" iconPos="left" value="" styleClass="button-only-icon" style="height: 26px; " oncomplete="credorDialog.show()" update=":dialogForm"  />
+                    <p:commandButton id="findCredorBtn" title="#{msg.fornecedor}" icon="ui-icon-search" iconPos="left" value="" styleClass="button-only-icon" style="height: 26px; " oncomplete="PF('credorDialog').show()" update=":dialogForm"  />
                 </h:panelGroup>
 
                 <p:selectOneMenu id="filtroClasseInsumos" filter="true" filterMatchMode="contains" value="#{insumoController.filtroClasseInsumo}" style="width: 135px">

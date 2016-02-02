@@ -11,19 +11,22 @@
     <f:subview id="form-orc">
         <h:panelGroup id="dialogPanelOrc" style='margin-right: 0px; width: auto'>
             <h:form id="formOrc">
-                <p:dialog widgetVar="dlgOrc" modal="true" styleClass="dialog" style="position: absolute; float: top" position="top" closeOnEscape="true" header="#{msg.orcamento} - #{orcamentoController.currentItem.insumoSub.insumo}" >
+                <p:dialog  widgetVar="dlgOrc" id="dlgOrc" modal="true" styleClass="dialog" style="position: absolute; float: top" position="top" closeOnEscape="true" header="#{msg.orcamento} - #{orcamentoController.currentItem.insumoSub.insumo}" >
                     <f:facet name="footer">
-                        <p:commandButton id="btnOrcOk" value="#{orcamentoController.valorSoma}"  icon="ui-icon-circle-check" iconPos="left" 
-                                         actionListener="#{followUpSolicitacoesController.substituteSolicItemOrcado(orcamentoController.confirmOrcamentoGrid(), orcamentoController.solicitacao)}" 
-                                         oncomplete="dlgOrc.hide()" update=":panelMain" style="position: relative; float: bottom; min-width: 100px" />
+                        <h:panelGroup id="btnOrcPnl">
+                            <p:commandButton disabled="#{orcamentoController.validationFailed or orcamentoController.valorSoma == '0,0000'}" id="btnOrcOk" value="#{orcamentoController.valorSoma}" icon="ui-icon-circle-check" iconPos="left" 
+                                             action="#{orcamentoController.confirmOrcamentoGrid()}"
+                                             oncomplete="PF('dlgOrc').hide()" update=":panelMain" style="position: relative; float: bottom; min-width: 100px" />
+                          
+                        </h:panelGroup>
                     </f:facet>
                     <p:treeTable id="treeOrc" value="#{orcamentoController.root}" var="root" rendered="#{orcamentoController.root != null}" 
-                                 emptyMessage="#{msg.semNenhumRegistro}" scrollable="true" scrollHeight="true" liveResize="true" style="max-width: 800px; max-height: 500px">
+                                 emptyMessage="#{msg.semNenhumRegistro}" scrollable="true" scrollHeight="true" liveResize="true" style="max-width: 1000px; max-height: 500px">
                         <f:facet name="header">
                             <h:outputText value="#{orcamentoController.currentItem.gradeOrcamento.data}" style="font-size: small" />
                         </f:facet>
                         <p:column headerText="#{msg.discriminacao}" style="background-color: #{root.backgroundColor}; width: auto"> 
-                            <h:outputText value="#{root.discriminacao}" style="margin-left: #{root.marginLeft}px; color:black; font-size: smaller" />
+                            <h:outputText value="#{root.discriminacao}" style="margin-left: #{root.marginLeft}px; color: black; font-size: smaller; margin-right: 5px" />
                         </p:column>
                         <p:column id="clSalSol" headerText="#{msg.saldoAj}" style="background-color: #{root.backgroundColor}; width: 70px">
                             <h:outputText id="saldoSolic" value="#{utilsController.getRoundedNumberDouble(root.valorSaldo + root.valorSolic)}" rendered="#{root.valorSaldo != null}" style="font-size: smaller" >
@@ -32,11 +35,13 @@
                         </p:column>
 
                         <p:column headerText="#{msg.solicitado}" style="background-color: #{root.backgroundColor}; width: 70px">
-                            <pe:inputNumber id="inputValorSolicAtual" value="#{root.valorSolic}" decimalPlaces="4" onclick="this.select();"
+                            <pe:inputNumber id="inputValorSolicAtual" value="#{root.valorSolic}" decimalPlaces="4" required="true"
+                                            onclick="this.select();" ondblclick="solicitadoIgualSaldo(this)" validator="saldoOrcValidator"
                                             disabled="#{root.insumoCod == 0}" rendered="#{root.classeItem == 'IN' and orcamentoController.solicitacao}" 
-                                            maxValue="#{utilsController.somarNumerosPositivos(root.valorSaldo, root.valorSolic, 4)}" ondblclick="solicitadoIgualSaldo(this);"
-                                            style="font-size: smaller; height: 10px; width: 70px; background: #{root.valorSolic == null or root.valorSolic > 0 ? 'blue' : 'white'}; color: #{root.valorSolic == null or root.valorSolic > 0 ? 'white' : '#585b57'}">
-                                <p:ajax listener="#{orcamentoController.getSomaValores()}" update=":form-solicitacao:form-orc:formOrc:btnOrcOk :form-solicitacao:form-orc:formOrc:treeOrc:inputValorSolicAtual" /> 
+                                            style="font-size: smaller; height: 10px; width: 70px; background:#{root.valorSolic == null or root.valorSolic > 0 ? 'blue' : 'white'}; color: #{root.valorSolic == null or root.valorSolic > 0 ? 'white' : '#585b57'}"
+                                            maxValue="#{utilsController.somarNumerosPositivos(root.valorSaldo, root.valorSolic, 4)}">
+                                <p:ajax event="keyup" update=":form-solicitacao:form-orc:formOrc:btnOrcOk" oncomplete="PF('dlgOrc').show()" listener="#{orcamentoController.getSomaValores()}" /> 
+                                <f:param name="valorSaldo" value="#{root.valorSaldo + root.valorSolic}" />
                             </pe:inputNumber>
 
                             <h:outputText value="#{root.valorSolic}" rendered="#{root.valorSolic != null and root.classeItem == 'IN' and !orcamentoController.solicitacao}" style="color: #{root.valorSolic > 0 ? 'blue' : '#585b57'}; font-size: smaller">

@@ -84,6 +84,20 @@ public final class DateUtils {
         }
         return sd.format(date);
     }
+    /**
+     * 
+     * @param date
+     * @return 
+     */
+    public static String getOnlyDate(final Date date){
+        
+         DateFormat sd = getFormatter("dd/MMMM/yy");
+        if (date == null) {
+            return sd.format(new Date());
+        }
+        return sd.format(date);
+                
+    }
 
     /**
      * Formata a data do dia, formato AAAAMMDD, para ser incluida na
@@ -755,7 +769,7 @@ public final class DateUtils {
     }
 
     /**
-     * Define a data passada para o formato YYYYMM.
+     * Define a data passada para o formato yyyyMM.
      *
      * @param refDate
      * @return
@@ -767,6 +781,6 @@ public final class DateUtils {
      */
     public static String getYearMonth(Date refDate) {
         // refDate = addDays(refDate, 1);
-        return getDataFormatada("YYYYMM", refDate);
+        return getDataFormatada("yyyyMM", refDate);
     }
 }

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Impostos_Retidos" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="04b21ce1-4875-4533-95d2-aee3fc6ecfec">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row" backcolor="#C0C0C0">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Detail" vAlign="Middle" fontSize="7"/>
+	<parameter name="Empresa_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Filial_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Centro_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Cre_CGCCPF" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Pedido_Numero" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+
+DocFiscal_ID = RTRIM(DocEnt.EntDocTipo_Cod) + ' ' +
+               RTRIM(DocEnt.Ent_DocNumero),
+
+DocEnt.Ent_DataEntrada,
+
+Ent_ValorINSS = CASE WHEN ( DocEnt.Ent_INSS_Recolhimento = 'R' ) then DocEnt.Ent_ValorINSS else 0.00 end,
+Ent_ValorISS = CASE WHEN ( DocEnt.Ent_ISS_Recolhimento = 'R' ) then DocEnt.Ent_ValorISS else 0.00 end,
+Ent_ValorIRRF = CASE WHEN ( DocEnt.Ent_IRRF_Recolhimento = 'R' ) then DocEnt.Ent_ValorIRRF else 0.00 end,
+Ent_ValorPISCOFINSCSSL = CASE WHEN ( DocEnt.Ent_PIS_Recolhimento = 'R' ) then ( DocEnt.Ent_ValorPIS + DocEnt.Ent_ValorCOFINS + DocEnt.Ent_ValorCSSL ) else 0.00 end
+
+
+FROM dbo.Documento_de_Entrada DocEnt,
+     dbo.Documento_de_Entrada_Item DocEntItem,
+     dbo.Pedido Pedido,
+     dbo.Credor Credor,
+     dbo.Centro_de_Custo Centro
+
+WHERE DocEnt.Ent_Numero = DocEntItem.Ent_Numero
+  and DocEntItem.Pedido_Numero = Pedido.Pedido_Numero
+
+  and ( DocEnt.Empresa_Cod = Centro.Empresa_Cod )
+  AND ( DocEnt.Filial_Cod = Centro.Filial_Cod )
+  AND ( DocEnt.Centro_Cod = Centro.Centro_Cod )
+
+  and Pedido.Cre_Cod = Credor.Cre_Cod -- OK
+
+  AND ( substring(DocEnt.Nop_Cod,2,4) <> '9902'  ) -- Simples Remessa  
+
+  and Pedido.Empresa_Cod = Centro.Empresa_Cod
+  and Pedido.Filial_Cod = Centro.Filial_Cod
+  and Pedido.Centro_Cod = Centro.Centro_Cod
+
+   and DocEnt.Empresa_Cod = $P{Empresa_Cod}
+  and DocEnt.Filial_Cod = $P{Filial_Cod}
+  and DocEnt.Centro_Cod = $P{Centro_Cod}
+  and Credor.Cre_CGCCPF = $P{Cre_CGCCPF}
+
+  and ( Pedido.Pedido_Numero = $P{Pedido_Numero} or $P{Pedido_Numero} is null ) 
+
+  AND
+
+
+  (
+
+      ( ( coalesce(DocEnt.Ent_ValorPIS,0) > 0 )  and  ( DocEnt.Ent_PIS_Recolhimento = 'R' ) )
+
+      or
+
+      ( ( coalesce(DocEnt.Ent_ValorCOFINS,0) > 0 ) and  ( DocEnt.Ent_COFINS_Recolhimento = 'R' ) )
+
+       or
+
+      ( ( coalesce(DocEnt.Ent_ValorCSSL,0) > 0 )  and   ( DocEnt.Ent_CSSL_Recolhimento = 'R' ) )
+
+       or
+
+      ( ( coalesce(DocEnt.Ent_ValorINSS,0) > 0 )  and   ( DocEnt.Ent_INSS_Recolhimento = 'R' ) )
+
+       or
+
+      ( ( coalesce(DocEnt.Ent_ValorISS,0) > 0 )  and   ( DocEnt.Ent_ISS_Recolhimento = 'R' ) )
+
+       or
+
+      ( ( coalesce(DocEnt.Ent_ValorIRRF,0) > 0 ) and   ( DocEnt.Ent_IRRF_Recolhimento = 'R' ) )
+
+  )
+
+
+
+
+ORDER BY RTRIM(DocEnt.EntDocTipo_Cod) + ' ' + RTRIM(DocEnt.Ent_DocNumero)]]>
+	</queryString>
+	<field name="DocFiscal_ID" class="java.lang.String"/>
+	<field name="Ent_DataEntrada" class="java.sql.Timestamp"/>
+	<field name="Ent_ValorINSS" class="java.math.BigDecimal"/>
+	<field name="Ent_ValorISS" class="java.math.BigDecimal"/>
+	<field name="Ent_ValorIRRF" class="java.math.BigDecimal"/>
+	<field name="Ent_ValorPISCOFINSCSSL" class="java.math.BigDecimal"/>
+	<variable name="total_INSS" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Ent_ValorINSS}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="total_ISS" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Ent_ValorISS}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="66" height="20" uuid="13061f85-399e-4065-b813-7955a3384e6c"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[N Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="66" y="20" width="66" height="20" uuid="fbc6ae18-dd16-440a-a957-616c5f165e23"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="132" y="20" width="66" height="20" uuid="d596f9d8-7f39-48a2-9f48-8beaa3d92e96"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Valor INSS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="20" width="66" height="20" uuid="eb792224-438e-4a74-9b25-b6c18dba6582"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Valor ISS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="20" width="66" height="20" uuid="c3300d82-b98f-4e40-9c54-f237c86baa9f"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Valor IRRF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="20" width="110" height="20" uuid="8b2f8e67-9041-4cd5-bda6-5dae2e7f29f3"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Valor PIS/CONFIG.CSLL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="248" height="20" uuid="790683b0-6f0d-4f4c-a9a8-7eba8d8977de"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Impostos Retidos:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<frame>
+				<reportElement style="row" x="0" y="0" width="802" height="14" uuid="a14c6e47-1e55-4a89-a710-771acbb5172b"/>
+				<textField>
+					<reportElement style="Detail" x="0" y="0" width="66" height="14" uuid="38e93ec9-b453-4657-8399-fa6f02285ae8"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DocFiscal_ID}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement style="Detail" x="66" y="0" width="66" height="14" uuid="501c382e-9dfd-4a80-baf0-7f0177dcec2b"/>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_DataEntrada}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="132" y="0" width="66" height="14" uuid="3c31e7dd-8854-4f9d-9275-364f8dcddf67"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_ValorINSS}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="198" y="0" width="66" height="14" uuid="0229c761-3b2d-4041-8dd0-e8c223888672"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_ValorISS}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="264" y="0" width="66" height="14" uuid="9d8a96e1-af80-488f-b5d3-49efca8dc83f"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_ValorIRRF}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="330" y="0" width="110" height="14" uuid="de1aacd8-95fb-4381-a0f9-db624429c933"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_ValorPISCOFINSCSSL}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="22">
+			<line>
+				<reportElement x="0" y="0" width="802" height="1" uuid="2c934e77-c00d-4e9f-bd34-a425b01af837"/>
+			</line>
+			<line>
+				<reportElement x="0" y="21" width="802" height="1" uuid="4ed68011-62c9-46b5-a414-1b3cedeb1882"/>
+			</line>
+			<textField pattern="#,##0.00;-#,##0.000">
+				<reportElement x="115" y="0" width="83" height="20" uuid="5d2587d4-52b7-4446-a46b-01f7da0305a3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_INSS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.000">
+				<reportElement x="198" y="0" width="66" height="19" uuid="3c2818e2-1ac4-431c-af7e-eabfc9d212f9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_ISS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="115" height="20" uuid="03e68932-94ec-4b10-926b-630551813b62"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Impostos Retidos:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

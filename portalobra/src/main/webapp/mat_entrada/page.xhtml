@@ -64,10 +64,10 @@
                             <ui:repeat value="#{materialEntradaController.items}" var="item" varStatus="s">
                                 <tr>
                                     <td>
-                                        <p:commandButton icon="ui-icon-arrow-1-e" iconPos="left" value="" style="height: 15px; width: 25px" styleClass="button-only-icon" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('E', item.numeroEntrada)}" oncomplete="dlgMatEnt.hide()" actionListener="#{materialEntradaController.clean()}" update=":panelEntradaMaterialF" />
+                                        <p:commandButton icon="ui-icon-arrow-1-e" iconPos="left" value="" style="height: 15px; width: 25px" styleClass="button-only-icon" action="#{materialEntradaController.prepareEdit(item.numeroEntrada)}" oncomplete="PF('dlgMatEnt').hide()" actionListener="#{materialEntradaController.clean()}" update=":panelEntradaMaterialF" />
                                     </td>
                                     <td>
-                                        <p:commandLink value="#{item.numeroEntrada}" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('E', item.numeroEntrada)}" oncomplete="dlgMatEnt.hide()" actionListener="#{materialEntradaController.clean()}" update=":panelEntradaMaterialF" style="margin: 0px 15px 0px 15px;" styleClass="tableLinkField" />
+                                        <p:commandLink value="#{item.numeroEntrada}" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('E', item.numeroEntrada)}" oncomplete="PF('dlgMatEnt').hide()" actionListener="#{materialEntradaController.clean()}" update=":panelEntradaMaterialF" style="margin: 0px 15px 0px 15px;" styleClass="tableLinkField" />
                                     </td>
                                     <td>
                                         <h:outputText value="#{item.dataEntrada}" style="margin: 0px 15px 0px 15px" >

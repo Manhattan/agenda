@@ -16,6 +16,7 @@ import br.com.grupopibb.portalobra.dao.geral.NucleoNegocioFacade;
 import br.com.grupopibb.portalobra.dao.insumo.CaracterizacaoInsumosFacade;
 import br.com.grupopibb.portalobra.dao.insumo.ClasseInsumosFacade;
 import br.com.grupopibb.portalobra.dao.insumo.GrupoInsumosFacade;
+import br.com.grupopibb.portalobra.dao.pedido.PedidoFacade;
 import br.com.grupopibb.portalobra.dao.solicitacaocompra.SolicitanteFacade;
 import br.com.grupopibb.portalobra.model.ar.DocumentoEntradaTipo;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
@@ -27,9 +28,12 @@ import br.com.grupopibb.portalobra.model.geral.NucleoNegocio;
 import br.com.grupopibb.portalobra.model.insumo.CaracterizacaoInsumos;
 import br.com.grupopibb.portalobra.model.insumo.ClasseInsumos;
 import br.com.grupopibb.portalobra.model.insumo.GrupoInsumos;
+import br.com.grupopibb.portalobra.model.pedido.Pedido;
 import br.com.grupopibb.portalobra.model.solicitacaocompra.Solicitante;
 import br.com.grupopibb.portalobra.model.tipos.EnumRecolhimentoImposto;
 import br.com.grupopibb.portalobra.utils.JsfUtil;
+import java.io.Serializable;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -71,10 +75,12 @@ public class ConverterController {
     private EmpresaFacade empresaFacade;
     @EJB
     private NucleoNegocioFacade nucleoFacade;
-
+    @EJB
+    private PedidoFacade pedidoFacade;
     //====================
     // Conversor (ClasseInsumos)
     //====================
+
     /**
      * Conversor para classe ClasseInsumos.
      */
@@ -259,7 +265,7 @@ public class ConverterController {
      * Conversor para classe CentroCusto.
      */
     @FacesConverter(forClass = CentroCusto.class, value = "centroCustoConverter")
-    public static class CentroCustoConverter implements Converter {
+    public static class CentroCustoConverter implements Converter, Serializable {
 
         /**
          * Devolve um Objeto DetalheProcedimento com base nos parâmetros.
@@ -274,12 +280,13 @@ public class ConverterController {
         @Override
         public Object getAsObject(final FacesContext facesContext,
                 final UIComponent component, final String value) {
-            if (value == null || value.length() == 0) {
+            if (value != null && value.length() > 0 && !value.isEmpty()) {
+
+                CentroCusto c = (CentroCusto) this.getAttributesFrom(component).get(value);
+                return c;
+            } else {
                 return null;
             }
-            ConverterController controller =
-                    JsfUtil.getController("converterController", facesContext);
-            return controller.centroCustoFacade.findByEmpresaCodigo(String.valueOf(value));
         }
 
         /**
@@ -294,18 +301,23 @@ public class ConverterController {
         @Override
         public String getAsString(final FacesContext facesContext,
                 final UIComponent component, final Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof CentroCusto) {
+
+            if (object != null && object instanceof CentroCusto) {
                 CentroCusto o = (CentroCusto) object;
+                this.addAttribute(component, o);
                 return o.getId().toString();
             } else {
-                throw new IllegalArgumentException("object " + object
-                        + " is of type " + object.getClass().getName()
-                        + "; expected type: "
-                        + CentroCusto.class.getName());
+                return null;
             }
+        }
+
+        protected void addAttribute(UIComponent component, CentroCusto c) {
+            String key = String.valueOf(c.getId());
+            this.getAttributesFrom(component).put(key, c);
+        }
+
+        protected Map<String, Object> getAttributesFrom(UIComponent component) {
+            return component.getAttributes();
         }
     }
 
@@ -456,18 +468,19 @@ public class ConverterController {
     /**
      * Conversor para classe Credor.
      */
-    @FacesConverter(forClass = Credor.class, value = "credorConverter")
-    public static class CredorConverter implements Converter {
+    @FacesConverter(value = "credorConverter", forClass = Credor.class)
+    public static class CredorConverter implements Converter, Serializable {
 
         @Override
         public Object getAsObject(final FacesContext facesContext,
                 final UIComponent component, final String value) {
-            if (value == null || value.length() == 0) {
+            if (value != null && !value.isEmpty() && value.length() > 0) {
+                Credor c = (Credor) this.getAttributesFrom(component).get(value);
+                return c;
+            } else {
+
                 return null;
             }
-            ConverterController controller =
-                    JsfUtil.getController("converterController", facesContext);
-            return controller.credorFacade.find(value);
         }
 
         /**
@@ -482,18 +495,25 @@ public class ConverterController {
         @Override
         public String getAsString(final FacesContext facesContext,
                 final UIComponent component, final Object object) {
-            if (object == null) {
+
+            if (object != null && object instanceof Credor) {
+
+                Credor o = (Credor) object;
+                this.addAttribute(component, o);
+                return o.getCodigo().toString();
+
+            } else {
                 return null;
             }
-            if (object instanceof Credor) {
-                Credor o = (Credor) object;
-                return o.getId().toString();
-            } else {
-                throw new IllegalArgumentException("object " + object
-                        + " is of type " + object.getClass().getName()
-                        + "; expected type: "
-                        + Credor.class.getName());
-            }
+        }
+
+        protected void addAttribute(UIComponent component, Credor c) {
+            String key = String.valueOf(c.getCodigo());
+            this.getAttributesFrom(component).put(key, c);
+        }
+
+        protected Map<String, Object> getAttributesFrom(UIComponent component) {
+            return component.getAttributes();
         }
     }
 
@@ -645,6 +665,7 @@ public class ConverterController {
                     }
                 }
             }
+
             /**
              * Conversor para classe Empresa.
              */
@@ -664,8 +685,8 @@ public class ConverterController {
                 }
 
                 /**
-                 * Retorna o objeto Empresa em formato de String, que
-                 * representa uma Empresa.
+                 * Retorna o objeto Empresa em formato de String, que representa
+                 * uma Empresa.
                  *
                  * @param facesContext Contexto atual.
                  * @param component Componente JSF que mostra o Usuário na tela.
@@ -689,6 +710,7 @@ public class ConverterController {
                     }
                 }
             }
+
             /**
              * Conversor para classe NucleoNegocio.
              */
@@ -733,8 +755,107 @@ public class ConverterController {
                     }
                 }
             }
-            
-            
+
+            /**
+             * Conversor para classe Empresa.
+             */
+//            @FacesConverter(value = "pedidoConverter", forClass = Pedido.class)
+//            public static class PedidoConverter implements Converter {
+//
+//                @Override
+//                public Object getAsObject(final FacesContext facesContext,
+//                        final UIComponent component, final String value) {
+//                    if (value == null || StringUtils.isBlank(value)) {
+//                        return null;
+//                    }
+//
+//                    ConverterController controller =
+//                            JsfUtil.getController("converterController", facesContext);
+//                    return controller.pedidoFacade.find(Long.parseLong(value));
+//                }
+//
+//                /**
+//                 * Retorna o objeto Empresa em formato de String, que representa
+//                 * uma Empresa.
+//                 *
+//                 * @param facesContext Contexto atual.
+//                 * @param component Componente JSF que mostra o Usuário na tela.
+//                 * @param object Um Empresa.
+//                 * @return
+//                 */
+//                @Override
+//                public String getAsString(final FacesContext facesContext,
+//                       final UIComponent component, final Object object) {
+//                    if (object == null) {
+//                        return null;
+//                    }
+//                    if (object instanceof Pedido) {
+//                        Pedido o = (Pedido) object;
+//                        return o.getId().toString();
+//                    } else {
+//                        throw new IllegalArgumentException("object " + object
+//                                + " is of type " + object.getClass().getName()
+//                                + "; expected type: "
+//                                + Pedido.class.getName());
+//                    }
+//                }
+//            }
+            //====================
+            // Conversor (Pedido)
+            //====================
+            /**
+             * Conversor para classe Pedido.
+             */
+            @FacesConverter(value = "pedidoConverter", forClass = Pedido.class)
+            public static class PedidoConverter implements Converter, Serializable {
+
+                @Override
+                public Object getAsObject(final FacesContext facesContext,
+                        final UIComponent component, final String value) {
+                    if (value != null && !value.isEmpty() && value.length() > 0) {
+                        Pedido p = (Pedido) this.getAttributesFrom(component).get(value);
+                        return p;
+
+                    } else {
+                     
+                        return null;
+                    
+                    }
+                }
+
+                /**
+                 * Retorna o objeto Pedido em formato de String, que representa
+                 * um Pedido.
+                 *
+                 * @param facesContext Contexto atual.
+                 * @param component Componente JSF que mostra o Usuário na tela.
+                 * @param object Um Pedido.
+                 * @return
+                 */
+                @Override
+                public String getAsString(final FacesContext facesContext,
+                        final UIComponent component, final Object object) {
+
+                    if (object != null && object instanceof Pedido) {
+
+                        Pedido p = (Pedido) object;
+                        this.addAttribute(component, p);
+                        return p.getNumero().toString();
+
+                    } else {
+                        return null;
+                    }
+                }
+
+                protected void addAttribute(UIComponent component, Pedido p) {
+                    String key = String.valueOf(p.getNumero());
+                    this.getAttributesFrom(component).put(key, p);
+                }
+
+                protected Map<String, Object> getAttributesFrom(UIComponent component) {
+                    return component.getAttributes();
+                }
+            }
         }
     }
 }

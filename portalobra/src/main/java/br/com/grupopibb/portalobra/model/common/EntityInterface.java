@@ -53,4 +53,6 @@ public interface EntityInterface<T> extends Comparable<T>, Serializable {
      * @return 
      */
     boolean isMarcado();
+    
+    
 }

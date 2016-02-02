@@ -119,4 +119,11 @@ public class DocumentoEntradaAvaliacao implements EntityInterface<DocumentoEntra
     public int compareTo(DocumentoEntradaAvaliacao o) {
         return this.getId().toString().compareTo(o.getId().toString());
     }
+
+    @Override
+    public String toString() {
+        return codigoItem.toString();
+    }
+    
+    
 }

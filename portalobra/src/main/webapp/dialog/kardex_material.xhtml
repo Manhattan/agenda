@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
+                >
+    <f:subview id="sbw-kardex">
+        <h:panelGroup id="pngKardex"  style='margin-right: 0px; width: auto'>
+            <p:dialog header="#{msg.extratoMateriais} - #{materiaisEstoqueController.current.insumoSub}" closeOnEscape="true" widgetVar="dlgKardex" resizable="false">  
+                <h:form id="frmKardex">
+                    <table class="dialogtable">
+                        <tr>
+                            <th>#{msg.data}</th>
+                            <th>#{msg.classe}</th>
+                            <th>#{msg.tipo}</th>
+                            <th>#{msg.docTipo}</th>
+                            <th>#{msg.docNumero}</th>
+                            <th>#{msg.numero}</th>
+                            <th>#{msg.item}</th>
+                            <th>#{msg.quantidade}</th>
+                        </tr>
+                        <tr>
+                            <td>#{materiaisEstoqueController.dataSaldoInicial}</td>
+                            <td>SI</td>
+                            <td></td>
+                            <td>A</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="valored">
+                                <h:outputText value="#{materiaisEstoqueController.current.saldoInicial}">
+                                    <f:convertNumber type="number" minFractionDigits="4" maxFractionDigits="4" pattern=",##0.0" />
+                                </h:outputText>
+                            </td>
+                        </tr>
+                        <ui:repeat value="#{materiaisEstoqueController.current.materialEntradasESaidas}" var="mat" varStatus="e">
+                            <tr>
+                                <td>
+                                    <h:outputText value="#{mat.data}">
+                                        <f:convertDateTime locale="pt_BR" timeZone="#{initParam['timezone']}" pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </td>
+                                <td>#{mat.classe}</td>
+                                <td>#{mat.tipoMovimento}</td>
+                                <td>#{mat.tipoDocumento}</td>
+                                <td>#{mat.numeroDocumento}</td>
+                                <td>
+                                    <p:commandLink value="#{mat.numero}" rendered="#{mat.classe eq 'E'}" action="#{materialEntradaController.prepareEdit(mat.numero)}" update=":panelMain, :dialogForm" />
+                                    <p:commandLink value="#{mat.numero}" rendered="#{mat.classe eq 'S'}" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida(mat.classe, mat.numero)}" update=":panelMain, :dialogForm" />
+                                </td>
+                                <td>#{mat.itemItem}</td>
+                                <td class="valored">
+                                    <h:outputText value="#{mat.quantidade}">
+                                        <f:convertNumber type="number" minFractionDigits="4" maxFractionDigits="4" pattern=",##0.0" />
+                                    </h:outputText>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+
+                        <tr>
+                            <td>#{materiaisEstoqueController.dataSaldoFinal}</td>
+                            <td>SF</td>
+                            <td></td>
+                            <td>Z</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="valored">
+                                <h:outputText value="#{materiaisEstoqueController.current.saldoFinal}">
+                                    <f:convertNumber type="number" minFractionDigits="4" maxFractionDigits="4" pattern=",##0.0" />
+                                </h:outputText>
+                            </td>
+                        </tr>
+                    </table>
+                </h:form>
+            </p:dialog>
+        </h:panelGroup>
+    </f:subview>
+</ui:composition>

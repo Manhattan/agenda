@@ -21,6 +21,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 
 /**
  *
@@ -140,6 +142,7 @@ public class MaterialSaidaItens implements EntityInterface<MaterialSaidaItens> {
     private InsumoSub insumoSub;
     /*
      */
+    @DecimalMin(value = "0.0001", message = "A quantidade não pode ser 0!")
     @Column(name = "SaidaItem_Quantidade")
     private Double quantidade;
     /*
@@ -180,6 +183,11 @@ public class MaterialSaidaItens implements EntityInterface<MaterialSaidaItens> {
     @Transient
     private boolean marcado = false;
 
+    @Transient
+    private static boolean verificaQuant;
+    
+    
+    
     @Override
     public Serializable getId() {
         return materialSaida.getNumeroSaida().toString() + '-' + numero.toString();

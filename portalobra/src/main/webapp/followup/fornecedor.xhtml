@@ -15,7 +15,7 @@
                 <h:form id="fornecedorForm">
                     <p:commandButton value="#{msg.pagamento}" icon="ui-icon-cart" iconPos="left" 
                                      update=":menuApp:pngPosCred" actionListener="#{posicaoCredorController.initCredor(credorController.current)}" 
-                                     oncomplete="dlgPosCred.show()" style="float: left; height: 23px" />
+                                     oncomplete="PF('dlgPosCred').show()" style="float: left; height: 23px" />
                     <br/>
                     <br/>
                     <table class="dialogtable">

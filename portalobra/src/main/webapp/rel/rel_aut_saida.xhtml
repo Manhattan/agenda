@@ -9,8 +9,8 @@
                 >
     <f:subview id="pngAutSai">
         <p:dialog widgetVar="dlgRelAutSai" modal="true" closeOnEscape="true" resizable="false">
-            <h:form id="frmRelAutSai" style="background: #fdfdfd;">
-                <p:scrollPanel id="scpRelAutSai" style="width:auto; height: 550px; border: none">
+            <h:form id="frmRelAutSai" style="background: #fdfdfd;" target="_blank">
+                <p:scrollPanel id="scpRelAutSai" style="width: 900px; height: 550px;">
                     <h:panelGroup id="pngRelAutSaiPrint" style="width: 99%">
                         <table class="referencesmall" style="width: 99%; font-size: 98%">
                             <tr>
@@ -143,8 +143,8 @@
                         </table>
                     </h:panelGroup>
                 </p:scrollPanel>
-                    <p:commandButton value="#{msg.imprimir}" icon="ui-icon-print" iconPos="left">
-                        <p:printer target="pngRelAutSaiPrint" />
+                <p:commandButton ajax="false" value="#{msg.imprimir}" icon="ui-icon-print" iconPos="left" action="#{materialSaidaController.abrirRelatorioAutorizacao()}" >
+                        
                     </p:commandButton>
             </h:form>  
         </p:dialog>

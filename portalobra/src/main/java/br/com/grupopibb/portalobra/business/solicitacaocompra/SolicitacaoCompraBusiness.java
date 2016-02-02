@@ -94,4 +94,17 @@ public class SolicitacaoCompraBusiness {
             return 0.0;
         }
     }
+
+    /**
+     * Define o item da solicitação de compra com a quantidade orçada
+     * selecionada.
+     *
+     * @param item
+     */
+    public void substituteSolicItemOrcado(SolicitacaoCompra solicitacaoCompra, SolicitacaoCompraItem item, boolean solicitacao) {
+        if (item != null && solicitacao) {
+            int pos = solicitacaoCompra.getItens().indexOf(item);
+            solicitacaoCompra.getItens().set(pos, item);
+        }
+    }
 }

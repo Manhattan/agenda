@@ -9,6 +9,7 @@ import static br.com.grupopibb.portalobra.dao.commons.AbstractEntityBeans.getMap
 import br.com.grupopibb.portalobra.model.ar.DocumentoEntradaItem;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
 import br.com.grupopibb.portalobra.model.insumo.Insumo;
+import br.com.grupopibb.portalobra.model.insumo.InsumoSub;
 import br.com.grupopibb.portalobra.model.solicitacaocompra.SolicitacaoCompraItem;
 import br.com.grupopibb.portalobra.utils.UtilBeans;
 import java.util.List;
@@ -39,9 +40,9 @@ public class DocumentoEntradaItemFacade extends AbstractEntityBeans<DocumentoEnt
         super(DocumentoEntradaItem.class, DocumentoEntradaItemFacade.class);
     }
 
-    public List<DocumentoEntradaItem> findByInsumo(final CentroCusto centro, final Insumo insumo) {
+    public List<DocumentoEntradaItem> findByInsumo(final CentroCusto centro, final InsumoSub insumoSub) {
         Map<String, Object> params = getMapParams();
-        paramsInsumo(params, centro, insumo);
+        paramsInsumo(params, centro, insumoSub);
         try {
             return listPesqParam("DocumentoEntradaItem.findByInsumo", params);
         } catch (NoResultException | NullPointerException e) {
@@ -59,9 +60,9 @@ public class DocumentoEntradaItemFacade extends AbstractEntityBeans<DocumentoEnt
         params.put("solicItem", solicitacaoCompraItem);
     }
 
-    private void paramsInsumo(Map<String, Object> params, final CentroCusto centro, final Insumo insumo) {
+    private void paramsInsumo(Map<String, Object> params, final CentroCusto centro, final InsumoSub insumoSub) {
         params.put("centro", centro);
-        params.put("insumo", insumo);
+        params.put("insumo", insumoSub == null ? null : insumoSub.getInsumo());
         params.put("centro2", centro == null ? "todos" : "filtro");
     }
 }

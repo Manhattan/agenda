@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2c66689c-8d50-432f-a322-30a5950c360f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ano_mes" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+cC.Centro_Nome as 'Centro',
+mE.Insumo_Cod as 'Insumo',
+i.Insumo_Especificacao as 'Descrição',
+mE.Estoque_Quantidade as 'Quantidade',
+mE.Estoque_Valor as 'Estoque Valor'
+FROM MateriaisEstoque mE
+INNER JOIN Insumo i ON mE.Insumo_Cod = i.Insumo_Cod
+INNER JOIN Centro_de_Custo cC ON 
+mE.Empresa_Cod = cC.Empresa_Cod 
+AND mE.Filial_Cod = cC.Filial_Cod 
+AND mE.Centro_Cod = cC.Centro_Cod
+WHERE mE.Estoque_AnoMes = $P{ano_mes} AND mE.Empresa_Cod in('MSP', 'MSU')
+ORDER BY cC.Centro_Nome DESC, i.Insumo_Cod ASC]]>
+	</queryString>
+	<field name="Centro" class="java.lang.String"/>
+	<field name="Insumo" class="java.lang.Integer"/>
+	<field name="Descrição" class="java.lang.String"/>
+	<field name="Quantidade" class="java.math.BigDecimal"/>
+	<field name="Estoque Valor" class="java.math.BigDecimal"/>
+	<group name="Centro">
+		<groupExpression><![CDATA[$F{Centro}]]></groupExpression>
+		<groupHeader>
+			<band height="35">
+				<textField>
+					<reportElement x="0" y="0" width="572" height="35" forecolor="#404040" uuid="12c17011-af6c-4db6-b084-99a3b8891618"/>
+					<textElement>
+						<font size="20" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Centro}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="572" height="1" uuid="a226d088-eeef-4163-92f3-6119d7ec0979"/>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="299" height="40" uuid="d22034bd-a179-42c6-b053-306d5db2b592"/>
+				<textElement>
+					<font size="28" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Materiais de Estoque]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="46" height="20" uuid="606417b3-821b-4945-8316-fbc7bbe4b08c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Insumo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="46" y="0" width="352" height="20" uuid="1ab9f26f-a48a-4a35-9e07-e6dd9909d60f"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Descrição]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="0" width="91" height="20" uuid="42c9be94-5dae-4709-9797-ceb6db115717"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Quantidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="489" y="0" width="83" height="20" uuid="1c7cbd55-7618-458a-b47b-f6e15554dd7c"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Estoque Valor]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="572" height="1" uuid="5488b129-1944-4a1b-98c5-4ac576cca441"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="572" height="1" uuid="606f4a98-77e0-4fd0-b74f-ee1ce92a6a24"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="46" height="20" uuid="63626f48-7e46-4a8c-8044-f83dc1f99cf7"/>
+				<textFieldExpression><![CDATA[$F{Insumo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="46" y="0" width="352" height="20" uuid="8494ce60-eef7-4e88-a51c-0823ca934dcf"/>
+				<textFieldExpression><![CDATA[$F{Descrição}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="0" width="91" height="20" uuid="f3dbd02e-165b-4aef-b1e9-6ef112d0b241"/>
+				<textFieldExpression><![CDATA[$F{Quantidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="489" y="0" width="83" height="20" uuid="82af646f-4816-483d-953a-ca7db177ae47"/>
+				<textFieldExpression><![CDATA[$F{Estoque Valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="472" y="0" width="100" height="20" uuid="5ccbccf4-6064-45a7-a7ce-5013a76bb85e"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="80" height="20" uuid="a2e80cfa-4ede-4a87-abde-52be9baf8d8c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="80" y="0" width="40" height="20" uuid="4e34ce82-f4b5-4836-9f81-09d091446463"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

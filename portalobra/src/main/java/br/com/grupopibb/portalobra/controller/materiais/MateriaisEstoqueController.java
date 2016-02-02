@@ -13,6 +13,7 @@ import br.com.grupopibb.portalobra.dao.insumo.CaracterizacaoInsumosFacade;
 import br.com.grupopibb.portalobra.dao.insumo.ClasseInsumosFacade;
 import br.com.grupopibb.portalobra.dao.insumo.GrupoInsumosFacade;
 import br.com.grupopibb.portalobra.dao.materiais.MateriaisEstoqueFacade;
+import br.com.grupopibb.portalobra.model.geral.CentroCusto;
 import br.com.grupopibb.portalobra.model.insumo.CaracterizacaoInsumos;
 import br.com.grupopibb.portalobra.model.insumo.ClasseInsumos;
 import br.com.grupopibb.portalobra.model.insumo.GrupoInsumos;
@@ -22,6 +23,7 @@ import br.com.grupopibb.portalobra.model.tipos.EnumOrderMatEstField;
 import br.com.grupopibb.portalobra.utils.DateUtils;
 import br.com.grupopibb.portalobra.utils.JsfUtil;
 import br.com.grupopibb.portalobra.utils.NumberUtils;
+import br.com.grupopibb.portalobra.utils.ReportUtil;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -60,6 +62,8 @@ public class MateriaisEstoqueController extends EntityController<MateriaisEstoqu
     private GrupoInsumosFacade grupoInsumosFacade;
     @EJB
     private CaracterizacaoInsumosFacade caracterizacaoInsumosFacade;
+    @EJB
+    private ReportUtil report;
     private MateriaisEstoque current;
     private String insumoCod;
     private Date mesAno;
@@ -177,9 +181,8 @@ public class MateriaisEstoqueController extends EntityController<MateriaisEstoqu
      * Cria o kardex do item selecionado e atribui o item atualizado ao Material
      * de Estoque atual (current).
      */
-    public void mountKardex(MateriaisEstoque item) {
-        estoqueBusiness.mountKardex(item, DateUtils.addDays(mesAno, 1));
-        this.current = item;
+    public void mountKardex(MateriaisEstoque item, InsumoSub insumoSub, CentroCusto centro) {
+       this.current = estoqueBusiness.mountKardex(item, mesAno, centro, insumoSub);
     }
 
     public void atualizaSaldo(InsumoSub insumoSub) {
@@ -264,6 +267,15 @@ public class MateriaisEstoqueController extends EntityController<MateriaisEstoqu
             };
         }
         return pagination;
+    }
+    
+    public void abrirRelatorioMateriais(Date date, CentroCusto centro){
+        
+        if(centro != null){
+            this.report.abrirRelatorioEstoqueMateraisPorCentro(date, centro);
+        }else{
+            this.report.abrirRelatorioEstoqueMaterais(date);
+        }
     }
 
     public String getInsumoCod() {

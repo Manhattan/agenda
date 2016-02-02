@@ -12,7 +12,7 @@
             <h:panelGroup id="pngRelAutSai">
                 <ui:include src="../rel/rel_aut_saida.xhtml" rendered="#{materialSaidaController.current.tipoMovimento == 'T'}" />
             </h:panelGroup>
-            <h:form id="saidaMaterialForm">
+            <h:form id="saidaMaterialForm" target="_blank">
                 <h:outputText value="#{msg.saidaMateriais}" style="font-weight: bolder" />
                 <hr />
                 <table>
@@ -27,7 +27,7 @@
                         </td>
                         <td>
                             <h:outputText value="#{msg.criadoPor}: " style="font-weight: bolder" rendered="#{followUpSolicitacoesController.materialSaida.numeroSaida > 0}"/> 
-                            <h:outputText value="#{followUpSolicitacoesController.materialSaida.usuarioInsercao} " rendered="#{followUpSolicitacoesController.materialSaida.numeroSaida > 0}"/>
+                            <h:outputText value="#{followUpSolicitacoesController.materialSaida.usuarioInsercao}" rendered="#{followUpSolicitacoesController.materialSaida.numeroSaida > 0}"/>
                             <h:outputText value="#{followUpSolicitacoesController.materialSaida.dataInsercao}" rendered="#{followUpSolicitacoesController.materialSaida.numeroSaida > 0}" style="margin-right: 20px">
                                 <f:convertDateTime locale="pt_BR" timeZone="GMT-03:00" pattern="dd/MM/yyyy"/>
                             </h:outputText>
@@ -84,12 +84,23 @@
                         </p:confirmDialog>
                     </h:panelGroup>
 
-                    <p:commandButton id="btnPesquisarMatSai" update=":panelSaidaMaterialP" icon="ui-icon-search" value="#{msg.pesquisar}" oncomplete="dlgMatSai.show()" style="margin-right: 10px" />
-                    <p:commandButton id="cancelarSaidaMaterial" value="#{msg.cancelar}" style="width: 95px" icon="ui-icon-cancel" update=":panelMain, :panelMain" actionListener="#{followUpSolicitacoesController.limparMovimentacaoMaterial()}" oncomplete="#{insumoController.limparInsumos()}" />
-                    <p:commandButton id="btnConfirmarMatSai" value="#{msg.ok}" style="width: 95px;" update=":panelMain" oncomplete="#{insumoController.limparInsumos()}" icon="ui-icon-circle-check" disabled="#{!followUpSolicitacoesController.enableInsercaoMatSaida}"  actionListener="#{followUpSolicitacoesController.createOrEditMovimentacaoSaida()}" action="#{materialSaidaController.clean()}" />
+                    <p:commandButton id="btnPesquisarMatSai" value="#{msg.pesquisar}" 
+                                     oncomplete="PF('dlgMatSai').show()" update=":panelSaidaMaterialP" 
+                                     icon="ui-icon-search"   style="margin-right: 10px" />
+                    
+                    <p:commandButton id="cancelarSaidaMaterial" value="#{msg.cancelar}" 
+                                     actionListener="#{followUpSolicitacoesController.limparMovimentacaoMaterial()}" 
+                                     action="#{insumoSubController.limparInsumosSelecionados()}" 
+                                     update=":panelMain" icon="ui-icon-cancel" style="width: 95px"/>
+                    
+                    <p:commandButton id="btnConfirmarMatSai" value="#{msg.ok}" 
+                                     actionListener="#{followUpSolicitacoesController.createOrEditMovimentacaoSaida()}" 
+                                     action="#{insumoSubController.limparInsumosSelecionados()}" update=":panelMain" 
+                                     disabled="#{!followUpSolicitacoesController.enableInsercaoMatSaida}" 
+                                     icon="ui-icon-circle-check" style="width: 95px;"/>
                 </h:panelGrid>
 
-                <h:panelGrid id="tipoMovMSCentroDestino" columns="3">
+                <h:panelGrid id="tipoMovMSCentroDestino" columns="3" >
                     <h:outputText rendered="#{followUpSolicitacoesController.materialSaida.tipoMovimento == 'T'}" value="#{msg.centroDestino}:" style="font-weight: bolder" />
                     <h:outputText value="" />
                     <h:outputText value="" />
@@ -100,7 +111,11 @@
                         <p:ajax update="tipoMovMSCentroDestino" />
                         <f:converter converterId="centroCustoConverter" />
                     </p:selectOneMenu>
-                    <p:commandButton value="#{msg.autorizacao}" rendered="#{followUpSolicitacoesController.materialSaida.tipoMovimento == 'T'}" icon="ui-icon-print" iconPos="left" actionListener="#{materialSaidaController.initSaida(followUpSolicitacoesController.materialSaida)}" update=":form-saidamaterial:pngRelAutSai" oncomplete="dlgRelAutSai.show()" />
+                    <p:commandButton value="#{msg.autorizacao}" 
+                                     ajax="false"
+                                     rendered="#{followUpSolicitacoesController.materialSaida.tipoMovimento == 'T'}" 
+                                     icon="ui-icon-print" iconPos="left" actionListener="#{materialSaidaController.initSaida(followUpSolicitacoesController.materialSaida)}"
+                                     action="#{materialSaidaController.abrirRelatorioAutorizacao()}"/>
                 </h:panelGrid>
 
                 <p:panel id="saidaMaterialTable" style='margin-right: 0px; width: auto'>
@@ -136,7 +151,7 @@
                         <ui:repeat rendered="#{followUpSolicitacoesController.materialSaida.itens != null}" value="#{followUpSolicitacoesController.materialSaida.itens}" var="mi" varStatus="s">
                             <tr class="noborder">
                                 <td>
-                                    <p:commandButton id="btnRemoveItemSM" actionListener="#{followUpSolicitacoesController.removerItemMatSaida(mi)}" disabled="#{!followUpSolicitacoesController.enableEdicaoMatSaida}" update=":form-saidamaterial:saidaMaterialForm:saidaMaterialTable, :form-saidamaterial:saidaMaterialForm:btnConfirmarMatSai" icon="ui-icon-closethick" />
+                                    <p:commandButton immediate="true" id="btnRemoveItemSM" actionListener="#{followUpSolicitacoesController.removerItemMatSaida(mi)}" disabled="#{!followUpSolicitacoesController.enableEdicaoMatSaida}" update=":form-saidamaterial:saidaMaterialForm:saidaMaterialTable, :form-saidamaterial:saidaMaterialForm:btnConfirmarMatSai" icon="ui-icon-closethick" />
                                 </td>
                                 <td>
                                     #{mi.itemItem}
@@ -163,7 +178,7 @@
                                         <f:convertNumber type="number" minFractionDigits="4" maxFractionDigits="4" pattern=",##0.0" />
                                     </h:outputText>
                                     <p:commandButton id="updtEstqBtn" title="#{msg.atualizarSaldo}" icon="ui-icon-refresh" iconPos="left" value="" styleClass="button-only-icon" 
-                                                     update=":form-saidamaterial:saidaMaterialForm:saidaMaterialTable"  actionListener="#{materiaisEstoqueController.atualizaSaldo(mi.insumoSub)}" action="#{followUpSolicitacoesController.limpaLimiteMovSaida(mi)}"
+                                                     update=":form-saidamaterial:saidaMaterialForm:saidaMaterialTable" actionListener="#{materiaisEstoqueController.atualizaSaldo(mi.insumoSub)}" action="#{followUpSolicitacoesController.limpaLimiteMovSaida(mi)}"
                                                      style = "margin-left: 10px"/>
                                 </td>
                                 <td>
@@ -174,7 +189,7 @@
                         <tr class="noborder">
                             <td></td>
                             <td colspan="2">
-                                <p:commandButton oncomplete="dlgNovoInsumoSub.show()" actionListener="#{insumoController.desconsiderarLinkOrcamento()}" icon="ui-icon-circle-plus" update=":form-insumoSub:dialogPanelInsumoSub" style="width: 30px; height: 20px; margin-right: 5px" disabled="#{!followUpSolicitacoesController.enableEdicaoMatSaida}">
+                                <p:commandButton oncomplete="PF('dlgNovoInsumoSub').show()" actionListener="#{insumoSubController.desconsiderarLinkOrcamento()}" icon="ui-icon-circle-plus" update=":form-insumoSub:dialogPanelInsumoSub" style="width: 30px; height: 20px; margin-right: 5px" disabled="#{!followUpSolicitacoesController.enableEdicaoMatSaida}">
                                 </p:commandButton>
                             </td>
                         </tr>

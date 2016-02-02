@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="16aede11-62b1-48fd-a24f-b7e04244794a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row" backcolor="#C0C0C0">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Detail" vAlign="Middle" fontSize="10"/>
+	<parameter name="mes_ano" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Centro_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Filial_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Empresa_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGE_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+RTRIM(cDC.Centro_Nome) as 'Centro', 
+mE.Estoque_Valor AS 'Valor Estoque',
+mE.Estoque_Quantidade AS 'Quantidade',
+mE.Estoque_AnoMes as 'Ano/Mês',
+i.Insumo_Cod as 'Insumo',
+i.Insumo_Especificacao as 'Especificação Insumo',
+RTRIM(i.Unid_Cod) as 'Unid',
+RTRIM(cDI.CarIns_Titulo) as 'Carac Titulo',
+RTRIM(gDI.GruIns_Titulo) as 'Grup Titulo',
+RTRIM(claDI.ClaIns_Titulo) as 'Cla Titulo'
+FROM Centro_de_Custo cDC
+INNER JOIN MateriaisEstoque mE ON cDC.Empresa_Cod = mE.Empresa_Cod AND mE.Filial_Cod = cDC.Filial_Cod AND mE.Centro_Cod = cDC.Centro_Cod
+INNER JOIN Insumo i ON mE.Insumo_Cod = i.Insumo_Cod 
+INNER JOIN Caracterizacao_de_Insumos cDI ON i.CarIns_Cod = cDI.CarIns_Cod AND i.ClaIns_Cod = cDI.ClaIns_Cod AND i.GruIns_Cod = cDI.GruIns_Cod
+INNER JOIN Grupo_de_Insumos gDI ON i.GruIns_Cod = gDI.GruIns_Cod AND i.ClaIns_Cod = gDI.ClaIns_Cod
+INNER JOIN Classe_de_Insumos claDI ON i.ClaIns_Cod = claDI.ClaIns_Cod
+WHERE mE.Estoque_AnoMes = $P{mes_ano} AND mE.Estoque_Quantidade != 0
+AND cDC.Empresa_Cod = $P{Empresa_Cod}
+AND cDC.Filial_Cod = $P{Filial_Cod}
+AND cDC.Centro_Cod = $P{Centro_Cod}
+ORDER BY cDC.Centro_Nome, claDI.ClaIns_Titulo, gDI.GruIns_Titulo]]>
+	</queryString>
+	<field name="Centro" class="java.lang.String"/>
+	<field name="Valor Estoque" class="java.math.BigDecimal"/>
+	<field name="Quantidade" class="java.math.BigDecimal"/>
+	<field name="Ano/Mês" class="java.lang.String"/>
+	<field name="Insumo" class="java.lang.Integer"/>
+	<field name="Especificação Insumo" class="java.lang.String"/>
+	<field name="Unid" class="java.lang.String"/>
+	<field name="Carac Titulo" class="java.lang.String"/>
+	<field name="Grup Titulo" class="java.lang.String"/>
+	<field name="Cla Titulo" class="java.lang.String"/>
+	<variable name="Total_Centro" class="java.lang.Double" resetType="Group" resetGroup="Centro:" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor Estoque}]]></variableExpression>
+	</variable>
+	<variable name="Total_Class" class="java.lang.Double" resetType="Group" resetGroup="Classe:" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor Estoque}]]></variableExpression>
+	</variable>
+	<variable name="Total_Grupo" class="java.lang.Double" resetType="Group" resetGroup="Grupo:" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor Estoque}]]></variableExpression>
+	</variable>
+	<variable name="Centro_1" class="java.lang.Integer" resetType="Group" resetGroup="Grupo:" calculation="Count">
+		<variableExpression><![CDATA[$F{Centro}]]></variableExpression>
+	</variable>
+	<group name="Centro:">
+		<groupExpression><![CDATA[$F{Centro}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="30" uuid="9c10004b-cc81-43dc-8df0-5d9e7afbf141"/>
+					<textElement>
+						<font size="18"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Centro}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="802" height="1" uuid="c9ae7071-bbf3-498b-acc5-bd82b361aea5"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField evaluationTime="Group" evaluationGroup="Centro:" pattern="#,##0.00;-#,##0.00">
+					<reportElement x="746" y="0" width="56" height="20" uuid="34e9b248-586f-45b2-8256-df7d335b64fa"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true" isItalic="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Total_Centro}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="474" y="0" width="272" height="20" uuid="ea35b946-791e-4831-a90a-7a024507dc3b"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Centro}+':']]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="802" height="1" uuid="74c664b3-59c6-4e3a-884a-fc81bdc54294"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Classe:">
+		<groupExpression><![CDATA[$F{Cla Titulo}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="25" uuid="c9809b3b-7027-4645-b0bc-9ac72d9eef90"/>
+					<textElement>
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Cla Titulo}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="802" height="1" uuid="848ca966-df63-46c4-b55a-c03de3490f5b"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField evaluationTime="Group" evaluationGroup="Classe:" pattern="#,##0.00;-#,##0.00">
+					<reportElement x="746" y="0" width="56" height="20" uuid="d297d5c3-32cd-4a3e-a4c3-478ad67265d1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Total_Class}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="802" height="1" uuid="fc64e9f0-a1a3-431d-a7be-f17aed0ef8b5"/>
+				</line>
+				<textField>
+					<reportElement x="474" y="0" width="272" height="20" uuid="954e77a9-f9e6-4e7b-9563-5742244d1ea9"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Cla Titulo}+':']]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Grupo:">
+		<groupExpression><![CDATA[$F{Grup Titulo}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement x="0" y="0" width="555" height="20" uuid="2efc7ae6-6a28-4b74-abc6-c8c09c94ab35"/>
+					<textElement>
+						<font size="13"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Grup Titulo}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="802" height="1" uuid="4f7b9305-17a4-484c-9311-cc603baa2174"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField evaluationTime="Group" evaluationGroup="Grupo:" pattern="#,##0.00;-#,##0.00">
+					<reportElement x="746" y="0" width="56" height="20" uuid="f7c4517f-c652-47ba-ad4e-bf07d17a782e"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Total_Grupo}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="802" height="1" uuid="375fef85-f368-49b1-88e8-2859204abad8"/>
+				</line>
+				<textField>
+					<reportElement x="474" y="0" width="272" height="20" uuid="010c894e-ee65-4f06-827b-121c0b404638"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Grup Titulo}+':']]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="342" height="53" uuid="69c0fb99-305f-46d7-84d7-ffd0ae768458"/>
+				<textElement>
+					<font size="35" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Estoque de Materiais]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="52" width="802" height="1" uuid="c30c664b-9cca-4d33-8d1e-a6f7d19070da"/>
+			</line>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="802" height="52" uuid="21030539-d73a-40b5-9a01-a23eff99fa39"/>
+			</rectangle>
+			<image>
+				<reportElement x="722" y="2" width="80" height="49" uuid="b5b783df-f076-45aa-b58a-1d1e2d8cbc54"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR}+"logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="593" y="0" width="169" height="20" uuid="056d26c9-9880-40e3-a396-8c36d18da157"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Caracterização]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="0" width="380" height="20" uuid="94ce8392-2fa2-4581-b5b0-b2d8dd96c8f9"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Especificação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="44" height="20" uuid="3aaf775d-6865-4e23-9a6b-5958a433d083"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Insumo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="522" y="0" width="63" height="20" uuid="bed39bfa-5354-4f2d-ac83-77bdeb4b75c9"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="762" y="-1" width="40" height="21" uuid="f593c299-65f1-4d60-9a4e-2f97a8ac67c9"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="466" y="0" width="56" height="20" uuid="5f878089-0317-4983-b14c-7e0b0b72ea94"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ano/Mês]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="2" width="37" height="18" uuid="60b10f5a-7f43-4457-9981-d96a3ee746a0"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unid]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<frame>
+				<reportElement style="row" x="0" y="0" width="802" height="14" uuid="1e37507f-fe17-40dd-bb05-1add33738033"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="593" y="0" width="171" height="14" uuid="04779463-db4c-4a28-9cdb-4536b483059f"/>
+					<textFieldExpression><![CDATA[$F{Carac Titulo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="44" y="0" width="380" height="14" uuid="e52520d3-e4cf-4d6a-9fcd-0f9e2c6fe34b"/>
+					<textFieldExpression><![CDATA[$F{Especificação Insumo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="0" y="0" width="44" height="14" uuid="0b5bb5c4-3b75-4305-9c84-433ea50abad8"/>
+					<textFieldExpression><![CDATA[$F{Insumo}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="Detail" x="762" y="0" width="40" height="14" uuid="5deb6f3b-6bb4-48d5-a8b1-961251a2d321"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{Valor Estoque}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="522" y="0" width="50" height="14" uuid="f67745ba-2cea-4728-901a-d4dc10f81f80"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{Quantidade}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="466" y="0" width="53" height="14" uuid="2c15e3e0-b498-4add-915a-75de99f52f19"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{Ano/Mês}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="429" y="0" width="37" height="14" uuid="0db5920d-c730-4062-bdcb-b2ba69c63ade"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{Unid}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="20" uuid="b1b90132-9fcd-47b0-b91f-2b7df58a1b0c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="90" y="0" width="40" height="20" uuid="cbd4d218-ef86-4c6f-a16d-6d6f9c522fe4"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="702" y="0" width="100" height="20" uuid="5aec8fa6-fae4-4794-ae65-1abc9a69d5c3"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="802" height="1" uuid="b07b6563-5f0b-4579-803c-5f4b5054bd22"/>
+			</line>
+		</band>
+	</columnFooter>
+</jasperReport>

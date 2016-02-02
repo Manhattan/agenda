@@ -12,7 +12,8 @@ public enum EnumTipoMovimentoMaterialEntrada {
 
     C("Compra"),
     T("Transferência"),
-    O("Outros");
+    O("Outros"),
+    I("Inventario");
     private String label;
 
     private EnumTipoMovimentoMaterialEntrada(String label) {

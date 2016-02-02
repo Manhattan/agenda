@@ -9,79 +9,82 @@
                 >
     <f:subview id="svwUltSolic">
         <h:panelGroup id="pngUltSolic" style="margin-right: 0px">
-            <p:dialog dynamic="true" widgetVar="dlgUltSolic" closeOnEscape="true" resizable="false" styleClass="dialog" style="position: absolute; float: top; max-width: 1000px" position="top" header="#{msg.ultimasCompras} - #{msg.insumo}: #{documentoEntradaItemController.insumoFiltro.codigo} - #{documentoEntradaItemController.insumoFiltro.especificacao}" >
-                <h:form id="frmUltSolic">
-                        <h:outputText value="#{msg.centroNegocioAbrev}: " style="font-weight: bold; float: left; position: relative; margin-top: 5px; margin-right: 5px"/>
-                        <p:selectOneMenu value="#{documentoEntradaItemController.centroFiltro}" filter="true" filterMatchMode="contains" style="float: left; position: relative; margin-right: 5px; text-align: left">
-                            <f:selectItem value="#{null}" itemLabel="" />
-                            <f:selectItems value="#{documentoEntradaItemController.centroSelect}" />
-                            <f:converter converterId="centroCustoConverter" />
-                        </p:selectOneMenu>
-                        <p:commandButton actionListener="#{documentoEntradaItemController.pesquisar()}" update=":menuApp:form-consulta-insumoSub:svwUltSolic:frmUltSolic:scpUltSolic" id="btnPesqDocEntI" value="#{msg.executar}" icon="ui-icon-search" iconPos="left" style="float: left; position: relative" />
-                        <br/>
-                        <p:scrollPanel id="scpUltSolic" style="max-height: 400px; float: left">
-                        <table class="referencesmall" style="min-width: 900px">
-                            <tr class="cabecalhoDiscreto" style="text-align: center">
-                                <th>
-                                    #{msg.forn}
-                                </th>
-                                <th>
-                                    #{msg.fornecedor}
-                                </th>
-                                <th>
-                                    #{msg.data}
-                                </th>
-                                <th>
-                                    #{msg.precoUnitarioAbrev}
-                                </th>
-                                <th style="width: 30px">
-                                    #{msg.numeroARAbrev}
-                                </th>
-                                <th>
-                                    #{msg.centro}
-                                </th>
-                                <th>
-                                    #{msg.nomeCentro}
-                                </th>
-                                <th>
-                                    #{msg.especificacaoComplementar}
-                                </th>
+            <p:dialog dynamic="true" 
+                      widgetVar="dlgUltSolic" 
+                      showEffect="clip" 
+                      hideEffect="clip" 
+                      closeOnEscape="true" 
+                      resizable="false" 
+                      styleClass="dialog" style="position: absolute; float: top; max-width: 1000px" position="center" header="#{msg.ultimasCompras} - #{msg.insumo}: #{documentoEntradaItemController.insumoFiltro.insumoCod} - #{documentoEntradaItemController.insumoFiltro.especificacao}" >
+                <div style="text-align: center;" >
+                    <h2 style="display: inline;">#{documentoEntradaItemController.centroFiltro.nomeCompleto}</h2>
+                    <p:commandButton style="float: right; margin-right: 20px; margin-top: 5px;" value="#{msg.sair}" oncomplete="PF('dlgUltSolic').hide()" 
+                        icon="ui-icon-closethick" />
+                </div>
+                <div style="overflow: scroll; overflow-y: scroll; height: 560px; float:left;" > 
+                    <table class="referencesmall" style="min-width: 900px">
+                        <tr class="cabecalhoDiscreto" style="text-align: center">
+                            <th>
+                                #{msg.forn}
+                            </th>
+                            <th>
+                                #{msg.fornecedor}
+                            </th>
+                            <th>
+                                #{msg.data}
+                            </th>
+                            <th>
+                                #{msg.precoUnitarioAbrev}
+                            </th>
+                            <th style="width: 30px">
+                                #{msg.numeroARAbrev}
+                            </th>
+                            <th>
+                                #{msg.centro}
+                            </th>
+                            <th>
+                                #{msg.nomeCentro}
+                            </th>
+                            <th>
+                                #{msg.especificacaoComplementar}
+                            </th>
+                        </tr>
+                        <ui:repeat value="#{documentoEntradaItemController.getItensInsumo()}" var="doc">
+                            <tr>
+                                <td>
+                                    #{doc.documentoEntrada.credor.codigo}
+                                </td>
+                                <td align='left'>
+                                    #{doc.documentoEntrada.credor.razaoSocial}
+                                </td>
+                                <td>
+                                    <h:outputText value="#{doc.documentoEntrada.dataEmissao}">
+                                        <f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR" timeZone="#{initParam['timezone']}" />
+                                    </h:outputText>                                       
+                                </td>
+                                <td>
+                                    <h:outputText value="#{doc.precoUnitarioE}">
+                                        <f:convertNumber currencyCode="BRL" minFractionDigits="4" maxFractionDigits="4" />
+                                    </h:outputText>
+                                </td>
+                                <td>
+                                    #{doc.documentoEntrada.avisoRecebimento.idSistema}
+                                </td>
+                                <td>
+                                    #{doc.documentoEntrada.centro.idCompleto}
+                                </td>
+                                <td align='left'>
+                                    #{doc.documentoEntrada.centro.nome}
+                                </td>
+                                <td>
+                                    #{doc.solicitacaoCompraItem.especificacaoComplemento}
+                                </td>
                             </tr>
-                            <ui:repeat value="#{documentoEntradaItemController.getItensInsumo()}" var="doc">
-                                <tr>
-                                    <td>
-                                        #{doc.documentoEntrada.credor.codigo}
-                                    </td>
-                                    <td align='left'>
-                                        #{doc.documentoEntrada.credor.razaoSocial}
-                                    </td>
-                                    <td>
-                                        <h:outputText value="#{doc.documentoEntrada.dataEmissao}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR" timeZone="#{initParam['timezone']}" />
-                                        </h:outputText>                                       
-                                    </td>
-                                    <td>
-                                        <h:outputText value="#{doc.precoUnitarioE}">
-                                            <f:convertNumber currencyCode="BRL" minFractionDigits="4" maxFractionDigits="4" />
-                                        </h:outputText>
-                                    </td>
-                                    <td>
-                                        #{doc.documentoEntrada.avisoRecebimento.idSistema}
-                                    </td>
-                                    <td>
-                                        #{doc.documentoEntrada.centro.idCompleto}
-                                    </td>
-                                    <td align='left'>
-                                        #{doc.documentoEntrada.centro.nome}
-                                    </td>
-                                    <td>
-                                        #{doc.solicitacaoCompraItem.especificacaoComplemento}
-                                    </td>
-                                </tr>
-                            </ui:repeat>
-                        </table>
-                    </p:scrollPanel>
-                </h:form>  
+                        </ui:repeat>
+                    </table>
+
+
+                </div>
             </p:dialog>
         </h:panelGroup>
     </f:subview>

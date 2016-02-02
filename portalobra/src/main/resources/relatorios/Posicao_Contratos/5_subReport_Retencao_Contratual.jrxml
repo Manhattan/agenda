@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Retencao_Contratual_Original" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2daba205-ead7-4931-977e-14ce8e3522de">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row" backcolor="#C0C0C0">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Detail" vAlign="Middle" fontSize="7"/>
+	<parameter name="Empresa_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Filial_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Centro_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Cre_CGCCPF" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Pedido_Numero" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+
+DocEnt.Ent_DataEntrada,
+
+DocFiscal_ID = RTRIM(DocEnt.EntDocTipo_Cod) + ' ' +
+               RTRIM(DocEnt.Ent_DocNumero),
+
+DocEnt.Empresa_Cod,
+DocEnt.Filial_Cod,
+DocEnt.Centro_Cod,
+DocEnt.AR_Numero,
+DocEnt.Cre_Cod,
+Centro_CodC = DocEnt.Empresa_Cod + DocEnt.Filial_Cod + DocEnt.Centro_Cod,
+DocEnt.EntDocTipo_Cod,
+DocEnt.Ent_DocNumero,
+DocEnt.Ent_DocData,
+DocEnt.Ent_DocUFOrigem,
+DocEnt.Ent_DocValor,
+
+DocEnt.Ent_ValorRetencao,
+Ent_ValorLiberado = 0,
+
+Cre_CGCCPF_RAIZ = SUBSTRING(Credor.Cre_CGCCPF,1,8)
+
+
+FROM dbo.Documento_de_Entrada DocEnt,
+     dbo.Documento_de_Entrada_Item DocEntItem,
+     dbo.Pedido Pedido,
+     dbo.Credor Credor,
+     dbo.Centro_de_Custo Centro
+
+WHERE DocEnt.Ent_Numero = DocEntItem.Ent_Numero
+  and DocEntItem.Pedido_Numero = Pedido.Pedido_Numero
+
+  and ( DocEnt.Empresa_Cod = Centro.Empresa_Cod )
+  AND ( DocEnt.Filial_Cod = Centro.Filial_Cod )
+  AND ( DocEnt.Centro_Cod = Centro.Centro_Cod )
+
+
+  and Pedido.Pedido_Numero = pedido.Pedido_Numero  -- OK
+  and Pedido.Cre_Cod = Credor.Cre_Cod -- OK
+
+  AND ( substring(DocEnt.Nop_Cod,2,4) <> '9902'  ) -- Simples Remessa    
+
+  and Pedido.Empresa_Cod = Centro.Empresa_Cod
+  and Pedido.Filial_Cod = Centro.Filial_Cod
+  and Pedido.Centro_Cod = Centro.Centro_Cod
+
+  and DocEnt.Empresa_Cod = $P{Empresa_Cod}
+  and DocEnt.Filial_Cod = $P{Filial_Cod}
+  and DocEnt.Centro_Cod = $P{Centro_Cod}
+  and Credor.Cre_CGCCPF = $P{Cre_CGCCPF}
+
+  AND ( coalesce(DocEnt.Ent_ValorRetencao,0) > 0 )
+
+  and ( Pedido.Pedido_Numero = $P{Pedido_Numero} or $P{Pedido_Numero} is null )  
+
+
+UNION ALL
+
+SELECT
+
+DocEnt.Ent_DataEntrada,
+
+DocFiscal_ID = RTRIM(DocEnt.EntDocTipo_Cod) + ' ' +
+               RTRIM(DocEnt.Ent_DocNumero),
+
+DocEnt.Empresa_Cod,
+DocEnt.Filial_Cod,
+DocEnt.Centro_Cod,
+DocEnt.AR_Numero,
+DocEnt.Cre_Cod,
+Centro_CodC = DocEnt.Empresa_Cod + DocEnt.Filial_Cod + DocEnt.Centro_Cod,
+DocEnt.EntDocTipo_Cod,
+DocEnt.Ent_DocNumero,
+DocEnt.Ent_DocData,
+DocEnt.Ent_DocUFOrigem,
+DocEnt.Ent_DocValor,
+
+Ent_ValorRetencao = 0.00,
+Ent_ValorLiberado = TitulosaPagar.TitaPag_Valor,
+
+Cre_CGCCPF_RAIZ = SUBSTRING(Credor.Cre_CGCCPF,1,8)
+
+
+FROM dbo.Titulos_a_Pagar TitulosaPagar,
+     dbo.Documento_de_Entrada DocEnt,
+     dbo.Credor Credor
+
+WHERE (TitulosaPagar.Ent_Numero = DocEnt.Ent_Numero)
+
+  and ( DocEnt.Ent_Tipo = 'OE' )
+  and ( DocEnt.MovFinNatureza_Cod = 'LR' )
+
+  and Credor.Cre_Cod = DocEnt.Cre_Cod
+
+-----  AND ( substring(DocEnt.Nop_Cod,2,4) <> '9902'  ) -- Simples Remessa  
+
+  and TitulosaPagar.Pag_Numero is not null
+  and DATALENGTH(TitulosaPagar.Pag_Numero)<> 0
+  and TitulosaPagar.TitaPag_Situacao = 'L'
+
+  and DocEnt.Empresa_Cod = $P{Empresa_Cod}
+  and DocEnt.Filial_Cod = $P{Filial_Cod}
+  and DocEnt.Centro_Cod = $P{Centro_Cod}
+  and Credor.Cre_CGCCPF = $P{Cre_CGCCPF}
+
+ORDER BY SUBSTRING(Credor.Cre_CGCCPF,1,8), DocEnt.Ent_DataEntrada]]>
+	</queryString>
+	<field name="Ent_DataEntrada" class="java.sql.Timestamp"/>
+	<field name="DocFiscal_ID" class="java.lang.String"/>
+	<field name="Empresa_Cod" class="java.lang.String"/>
+	<field name="Filial_Cod" class="java.lang.String"/>
+	<field name="Centro_Cod" class="java.lang.String"/>
+	<field name="AR_Numero" class="java.lang.Integer"/>
+	<field name="Cre_Cod" class="java.lang.String"/>
+	<field name="Centro_CodC" class="java.lang.String"/>
+	<field name="EntDocTipo_Cod" class="java.lang.String"/>
+	<field name="Ent_DocNumero" class="java.lang.String"/>
+	<field name="Ent_DocData" class="java.sql.Timestamp"/>
+	<field name="Ent_DocUFOrigem" class="java.lang.String"/>
+	<field name="Ent_DocValor" class="java.math.BigDecimal"/>
+	<field name="Ent_ValorRetencao" class="java.math.BigDecimal"/>
+	<field name="Ent_ValorLiberado" class="java.math.BigDecimal"/>
+	<field name="Cre_CGCCPF_RAIZ" class="java.lang.String"/>
+	<variable name="total_valor_retido" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Ent_ValorRetencao}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="total_valor_liberado" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Ent_ValorLiberado}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="total_diferenca" class="java.lang.Double">
+		<variableExpression><![CDATA[($V{total_valor_retido}-$V{total_valor_liberado})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="276" height="20" uuid="9c55ecc6-aa2f-4405-b38e-d5dd8b07e139"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Retenção Contratual]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="22" width="82" height="20" uuid="4989af19-b1e9-4484-a818-b298af1e8fdf"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Valor Retido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="22" width="89" height="20" uuid="88add392-8784-425a-a9da-0ab4dccc5dd5"/>
+				<text><![CDATA[N Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="22" width="82" height="20" uuid="1bf7fe90-c684-4d01-ad5d-46f5430ec922"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="256" y="22" width="87" height="20" uuid="22469ac0-fd02-4ecc-a9f2-3233808eea86"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Valor Liberado]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<frame>
+				<reportElement style="row" x="0" y="0" width="802" height="14" uuid="d96da373-7de5-44ae-a66d-160525991d72"/>
+				<textField>
+					<reportElement style="Detail" x="0" y="0" width="89" height="14" uuid="e3bb85f8-c14c-4b31-829e-a99ceb6d7e0e"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DocFiscal_ID}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement style="Detail" x="89" y="0" width="81" height="14" uuid="5f5eda43-bc5b-4dea-b782-f1f96c60bb61"/>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_DataEntrada}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="174" y="0" width="82" height="14" uuid="db8e0fbc-5dca-43e8-82ab-d1bf389e16b6"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_ValorRetencao}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="256" y="0" width="87" height="14" uuid="17de29cc-3073-4280-a6ab-f028f918d962"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Ent_ValorLiberado}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="156" y="0" width="100" height="20" uuid="885f4aaa-dd64-4d83-aa38-a8c6a4955fe5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_valor_retido}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="256" y="0" width="87" height="20" uuid="9dab5425-6d77-4ac6-aaa9-8864e43f51d2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_valor_liberado}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="802" height="1" uuid="14f72908-43b2-4229-819e-fbd006c37199"/>
+			</line>
+			<line>
+				<reportElement x="0" y="20" width="802" height="1" uuid="ceeb09a9-8347-4288-b4be-10f369e869fb"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="1" width="100" height="20" uuid="7e244515-b16c-4315-958b-ea47c774b3a0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Retenções:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="474" y="0" width="100" height="20" uuid="2cfdab59-c380-474e-ba05-2eec3ab4af16"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_diferenca}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="429" y="0" width="45" height="20" uuid="6f6eef74-e2d7-4bf4-ac87-bc6be0829954"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[a Liberar:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

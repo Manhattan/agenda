@@ -19,13 +19,13 @@
                             <h:outputText value="#{loginController.centroSelecionado.nomeCompleto}" style="margin-right: 20px" />
                         </td>
                         <td>
-                            <h:outputText value="#{msg.numeroMovimentoAbrev}: " rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}" style="font-weight: bolder" />
-                            <h:outputText value="#{followUpSolicitacoesController.materialEntrada.numeroEntrada}" rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}" />
+                            <h:outputText value="#{msg.numeroMovimentoAbrev}: " rendered="#{materialEntradaController.current.numeroEntrada > 0}" style="font-weight: bolder" />
+                            <h:outputText value="#{materialEntradaController.current.numeroEntrada}" rendered="#{materialEntradaController.current.numeroEntrada > 0}" />
                         </td>
                         <td>
-                            <h:outputText value="#{msg.criadoPor}: " style="font-weight: bolder" rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}"/> 
-                            <h:outputText value="#{followUpSolicitacoesController.materialEntrada.usuarioInsercao} " rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}"/>
-                            <h:outputText value="#{followUpSolicitacoesController.materialEntrada.dataInsercao}" rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}" style="margin-right: 20px">
+                            <h:outputText value="#{msg.criadoPor}: " style="font-weight: bolder" rendered="#{materialEntradaController.current.numeroEntrada > 0}"/> 
+                            <h:outputText value="#{materialEntradaController.current.usuarioInsercao} " rendered="#{materialEntradaController.current.numeroEntrada > 0}"/>
+                            <h:outputText value="#{materialEntradaController.current.dataInsercao}" rendered="#{materialEntradaController.current.numeroEntrada > 0}" style="margin-right: 20px">
                                 <f:convertDateTime locale="pt_BR" timeZone="#{initParam['timezone']}" pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </td>
@@ -33,18 +33,18 @@
                     <tr>
                         <td>
                             <h:outputText value="#{msg.mesAno}: " style="font-weight: bolder" />
-                            <h:outputText value="#{utilsController.getMesAno(followUpSolicitacoesController.materialEntrada.dataEntrada)}" />
+                            <h:outputText value="#{utilsController.getMesAno(materialEntradaController.current.dataEntrada)}" />
                         </td>
                         <td>
                             <h:outputText value="#{msg.dataMovimentoAbrev}: " style="font-weight: bolder" />
-                            <h:outputText value="#{followUpSolicitacoesController.materialEntrada.dataEntrada}" >
+                            <h:outputText value="#{materialEntradaController.current.dataEntrada}" style="margin-right: 20px" >
                                 <f:convertDateTime locale="pt_BR" timeZone="#{initParam['timezone']}" pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </td>
                         <td>
-                            <h:outputText value="#{msg.ultimaAlteracao}: " style="font-weight: bolder" rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}"/>
-                            <h:outputText value="#{followUpSolicitacoesController.materialEntrada.usuarioAlteracao} " rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}"/>
-                            <h:outputText value="#{followUpSolicitacoesController.materialEntrada.dataAlteracao}" rendered="#{followUpSolicitacoesController.materialEntrada.numeroEntrada > 0}">
+                            <h:outputText value="#{msg.ultimaAlteracao}: " style="font-weight: bolder" rendered="#{materialEntradaController.current.numeroEntrada > 0}"/>
+                            <h:outputText value="#{materialEntradaController.current.usuarioAlteracao} " rendered="#{materialEntradaController.current.numeroEntrada > 0}"/>
+                            <h:outputText value="#{materialEntradaController.current.dataAlteracao}" rendered="#{materialEntradaController.current.numeroEntrada > 0}">
                                 <f:convertDateTime locale="pt_BR" timeZone="#{initParam['timezone']}" pattern="dd/MM/yyyy"/>
                             </h:outputText>
                         </td>
@@ -60,37 +60,61 @@
                     <h:outputText value="#{msg.tipoDoc}:" style="font-weight: bold" />
                     <h:outputText value=""/><h:outputText value=""/><h:outputText value=""/><h:outputText value=""/><h:outputText value=""/>
 
-                    <p:inputText id="numeroDocumentoMatEnt" value="#{followUpSolicitacoesController.materialEntrada.numeroDocumento}" style="width: 80px; margin-right: 10px" maxlength="7"  />
+                    <p:inputText id="numeroDocumentoMatEnt" value="#{materialEntradaController.current.numeroDocumento}" style="width: 80px; margin-right: 10px" maxlength="7"  />
 
-                    <p:inputText value="#{followUpSolicitacoesController.materialEntrada.entradaOrigem}" readonly="true" style="margin-right: 10px" />
-                    <p:inputText value="#{followUpSolicitacoesController.materialEntrada.diaEntrada}" style="width: 30px; margin-right: 10px" maxlength="2" onkeypress="return SomenteNumero(event)" />
+                    <p:inputText value="#{materialEntradaController.current.entradaOrigem}" readonly="true" style="margin-right: 10px" />
+                    <p:inputText value="#{materialEntradaController.current.diaEntrada}" style="width: 30px; margin-right: 10px" maxlength="2" onkeypress="return SomenteNumero(event)" />
 
-                    <p:selectOneMenu value="#{followUpSolicitacoesController.materialEntrada.tipoMovimento}">
-                        <f:selectItems value="#{followUpSolicitacoesController.tipoMovimentoMaterialEntradaSelect}" var="i" itemLabel="#{i.label}" />
+                    <p:selectOneMenu value="#{materialEntradaController.current.tipoMovimento}">
+                        <f:selectItems value="#{materialEntradaController.tipoMovimentoSelect}" var="i" itemLabel="#{i.label}" />
                         <p:ajax update="btnTransf" />
                     </p:selectOneMenu>
 
-                    <p:commandButton value="" id="btnTransf" icon="ui-icon-transfer-e-w" iconPos="left" styleClass="button-only-icon" oncomplete="dlgTransfMat.show()" style="margin-right: 10px" disabled="#{followUpSolicitacoesController.materialEntrada.tipoMovimento != 'T'}" />
+                    <p:commandButton value="" id="btnTransf" 
+                                     oncomplete="PF('dlgTransfMat').show()" 
+                                     disabled="#{materialEntradaController.current.tipoMovimento != 'T'}"
+                                     icon="ui-icon-transfer-e-w" iconPos="left" styleClass="button-only-icon"  style="margin-right: 10px"/>
 
-                    <p:selectOneMenu value="#{followUpSolicitacoesController.materialEntrada.tipoDocumento}" style="margin-right: 10px">
-                        <f:selectItems value="#{followUpSolicitacoesController.tipoDocumentoMaterialEntradaSelect}" />
+                    <p:selectOneMenu value="#{materialEntradaController.current.tipoDocumento}" style="margin-right: 10px">
+                        <f:selectItems value="#{materialEntradaController.tipoDocumentoSelect}" />
                     </p:selectOneMenu>
 
                     <h:panelGroup>
-                        <p:commandButton id="btnRemoveMatEnt" icon='ui-icon-trash' value="#{msg.excluir}" update=":panelEntradaMaterialF, :panelMain" actionListener="#{followUpSolicitacoesController.removeMaterialEntrada()}" disabled="#{!followUpSolicitacoesController.enableRemocaoMatEntrada}" rendered="#{followUpSolicitacoesController.renderRemocaoMatEntrada}" style="width: 95px" >
+                        <p:commandButton id="btnRemoveMatEnt" value="#{msg.excluir}" 
+                                         actionListener="#{materialEntradaController.destroy()}"
+                                         update=":panelEntradaMaterialF, :panelMain" 
+                                         rendered="#{loginController.removeEntradaMaterial}"
+                                         disabled="#{!materialEntradaController.enableRemocao}" 
+                                         icon='ui-icon-trash' style="width: 95px" >
                             <p:confirm header="#{msg.excluirMaterialEntrada}" message="#{msg.confirmaExclusaoMaterialEntrada}" icon="ui-icon-alert" />
                         </p:commandButton>
+
                         <p:confirmDialog closeOnEscape="true" global="true" >
                             <p:commandButton value="#{msg.sim}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                             <p:commandButton value="#{msg.nao}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                         </p:confirmDialog>
                     </h:panelGroup>
 
-                    <p:commandButton id="btnPesquisarMatEnt" update=":panelEntradaMaterialP" icon="ui-icon-search" value="#{msg.pesquisar}" oncomplete="dlgMatEnt.show()" style="margin-right: 10px" />
-                    <p:commandButton id="cancelarEntradaMaterial" value="#{msg.cancelar}" style="width: 95px" icon="ui-icon-cancel" update=":panelMain" actionListener="#{followUpSolicitacoesController.limparMovimentacaoMaterial()}" oncomplete="#{insumoController.limparInsumos()}" />
-                    <p:commandButton id="btnConfirmarMatEnt" value="#{msg.ok}" style="width: 95px;" update=":panelMain" oncomplete="#{insumoController.limparInsumos()}" icon="ui-icon-circle-check" disabled="#{!followUpSolicitacoesController.enableInsercaoMatEntrada}" actionListener="#{followUpSolicitacoesController.createOrEditMovimentacaoEntrada()}" action="#{materialEntradaController.clean()}" />
+                    <p:commandButton id="btnPesquisarMatEnt" value="#{msg.pesquisar}" update=":panelEntradaMaterialP"  
+                                     oncomplete="PF('dlgMatEnt').show()" icon="ui-icon-search" style="margin-right: 10px">
+                    </p:commandButton>
 
+                    <p:commandButton id="cancelarEntradaMaterial" value="#{msg.cancelar}" 
+                                     actionListener="#{insumoSubController.limparInsumos()}" 
+                                     action="#{materialEntradaController.clean()}" 
+                                     update=":panelMain" 
+                                     icon="ui-icon-cancel" style="width: 95px">
+                    </p:commandButton>
+
+                    <p:commandButton id="btnConfirmarMatEnt" value="#{msg.ok}" 
+                                     actionListener="#{materialEntradaController.createOrEdit()}" 
+                                     action="#{followUpSolicitacoesController.recreateTable()}"
+                                     update=":panelMain"
+                                     disabled="#{!materialEntradaController.enableInsercao}" 
+                                     icon="ui-icon-circle-check" style="width: 95px;">
+                    </p:commandButton>
                 </h:panelGrid>
+                
                 <p:panel id="entradaMaterialTable" style="margin: 0px; padding: 0px; width: auto">
                     <table class="referencesmall" style='margin: 0px; width: auto'>
                         <tr class="cabecalhoDiscreto">
@@ -106,10 +130,10 @@
                             <th><h:outputText value="#{msg.observacao}" /></th>
                             <th><h:outputText value="#{msg.origem}" /></th>
                         </tr>
-                        <ui:repeat rendered="#{followUpSolicitacoesController.materialEntrada.itens != null}" value="#{followUpSolicitacoesController.materialEntrada.itens}" var="mi" varStatus="s">
+                        <ui:repeat rendered="#{materialEntradaController.current.itens != null}" value="#{materialEntradaController.current.itens}" var="mi" varStatus="s">
                             <tr class="noborder">
                                 <td>
-                                    <p:commandButton id="btnRemoveItemEM" actionListener="#{followUpSolicitacoesController.removerItemMatEntrada(mi)}" disabled="#{!followUpSolicitacoesController.enableEdicaoMatEntrada}" update=":form-entradamaterial:entradaMaterialForm:entradaMaterialTable, :form-entradamaterial:entradaMaterialForm:btnConfirmarMatEnt" icon="ui-icon-closethick" />
+                                    <p:commandButton id="btnRemoveItemEM" actionListener="#{materialEntradaController.removeItem(mi)}" disabled="#{!materialEntradaController.enableEdicao}" update=":form-entradamaterial:entradaMaterialForm:entradaMaterialTable, :form-entradamaterial:entradaMaterialForm:btnConfirmarMatEnt" icon="ui-icon-closethick" />
                                 </td>
                                 <td>
                                     #{mi.itemItem}
@@ -124,7 +148,7 @@
                                     #{mi.insumoSub.insumo.unidade.codigo}
                                 </td>
                                 <td align='center'>
-                                    <h:outputText value="#{followUpSolicitacoesController.getEstoqueAtual(mi.insumoSub)}">
+                                    <h:outputText value="#{materialEntradaController.getEstoqueAtual(mi.insumoSub)}">
                                         <f:convertNumber type="number" minFractionDigits="4" maxFractionDigits="4" pattern=",##0.0" />
                                     </h:outputText>
                                 </td>
@@ -134,7 +158,7 @@
                                     </pe:inputNumber>
                                 </td>
                                 <td>
-                                    <pe:inputNumber value="#{mi.valor}" style="width: 60px" minValue="0.01" >
+                                    <pe:inputNumber value="#{mi.valor}" style="width: 60px" >
                                         <p:ajax update="optPrUnit" />
                                     </pe:inputNumber>
                                 </td>
@@ -154,7 +178,7 @@
                         <tr class="noborder">
                             <td></td>
                             <td colspan="2">
-                                <p:commandButton oncomplete="dlgNovoInsumoSub.show()" icon="ui-icon-circle-plus" actionListener="#{insumoController.desconsiderarLinkOrcamento()}" update=":form-insumoSub:dialogPanelInsumoSub" style="width: 30px; height: 20px; margin-right: 5px" disabled="#{!followUpSolicitacoesController.enableEdicaoMatEntrada}">
+                                <p:commandButton oncomplete="PF('dlgNovoInsumoSub').show()" icon="ui-icon-circle-plus" actionListener="#{insumoController.desconsiderarLinkOrcamento()}" update=":form-insumoSub:dialogPanelInsumoSub" style="width: 30px; height: 20px; margin-right: 5px" disabled="#{!materialEntradaController.enableEdicao}">
                                 </p:commandButton>
                             </td>
                         </tr>

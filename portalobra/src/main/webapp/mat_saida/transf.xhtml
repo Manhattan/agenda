@@ -41,7 +41,7 @@
                                 <p:commandButton value="#{msg.executar}" update="transfMatTable" actionListener="#{materialSaidaController.pesquisaTransferencias()}"/>
                             </td>
                             <td>
-                                <p:commandButton  value="#{msg.incluir}" icon="ui-icon-circle-plus" update=":panelMain" oncomplete="dlgTransfMat.hide()" actionListener="#{followUpSolicitacoesController.initSelecionadosT(materialSaidaController.selecionadosT)}" action="#{materialSaidaController.limpaTransferencias()}" >
+                                <p:commandButton  value="#{msg.incluir}" icon="ui-icon-circle-plus" update=":panelMain" oncomplete="PF('dlgTransfMat').hide()" actionListener="#{materialEntradaController.initSelecionadosT(materialSaidaController.selecionadosT)}" action="#{materialSaidaController.limpaTransferencias()}" >
                                 </p:commandButton>
                             </td>
                         </tr>

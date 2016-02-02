@@ -35,7 +35,7 @@
                     <p:inputText value="#{pedidoItemController.numeroPedido}" />
                     <p:inputText value="#{pedidoItemController.caracterizacao}" />
                     <p:commandButton value="#{msg.executar}" actionListener="#{pedidoItemController.pesquisar(loginController.centroSelecionado)}" update=":viewPedidoItens:formPedidoItens" />
-                    <p:commandButton value="#{msg.incluirItem}" actionListener="#{documentoEntradaController.incluirItens(pedidoItemController.itensSelecionados)}" oncomplete="pedidoItensDialog.hide() #{pedidoItemController.limparItensSelecionados()}" />
+                    <p:commandButton value="#{msg.incluirItem}" actionListener="#{documentoEntradaController.incluirItens(pedidoItemController.itensSelecionados)}" oncomplete="PF('pedidoItensDialog').hide() #{pedidoItemController.limparItensSelecionados()}" />
                 </p:panelGrid>
 
                 <h:panelGroup id="pedidoItensTable">

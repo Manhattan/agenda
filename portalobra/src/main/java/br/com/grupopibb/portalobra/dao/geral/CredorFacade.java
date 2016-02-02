@@ -5,6 +5,8 @@
 package br.com.grupopibb.portalobra.dao.geral;
 
 import br.com.grupopibb.portalobra.dao.commons.AbstractEntityBeans;
+import static br.com.grupopibb.portalobra.dao.commons.AbstractEntityBeans.getMapParams;
+import br.com.grupopibb.portalobra.model.geral.CentroCusto;
 import br.com.grupopibb.portalobra.model.geral.Credor;
 import br.com.grupopibb.portalobra.model.geral.EspecieCredor;
 import br.com.grupopibb.portalobra.utils.StringBeanUtils;
@@ -36,13 +38,19 @@ public class CredorFacade extends AbstractEntityBeans<Credor, String> {
     public CredorFacade() {
         super(Credor.class, CredorFacade.class);
     }
+    
+    public List<Credor> listCredorByPedido(CentroCusto centro, Credor cre) {
+        Map<String, Object> params = getMapParams();
+        paramsPedido(params, centro, cre);
+        return listPesqParam("Credor.findCredorByPedido", params);
+    }
 
     public List<Credor> listPesqParamRange(final String codigo, final String cpfCnpj, final String nomeFantasia, final String razaoSocial, final String cidade, final String estado, final boolean semEspecificidade, final int[] range) {
         Map<String, Object> params = getMapParams();
         paramsPaginacao(params, codigo, cpfCnpj, nomeFantasia, razaoSocial, cidade, estado, semEspecificidade);
         return listPesqParamRange("Credor.selectRange", params, range[1] - range[0], range[0]);
     }
-    
+
     public Long pesqCount(final String codigo, final String cpfCnpj, final String nomeFantasia, final String razaoSocial, final String cidade, final String estado, final boolean semEspecificidade) {
         Map<String, Object> params = getMapParams();
         paramsPaginacao(params, codigo, cpfCnpj, nomeFantasia, razaoSocial, cidade, estado, semEspecificidade);
@@ -64,5 +72,13 @@ public class CredorFacade extends AbstractEntityBeans<Credor, String> {
         params.put("cidade2", cidade == null ? "todos" : "filtro");
         params.put("estado2", estado == null ? "todos" : "filtro");
         params.put("semEspecificidade", semEspecificidade ? "filtro" : "todos");
+    }
+
+    private void paramsPedido(Map<String, Object> params, CentroCusto centro, Credor cre) {
+
+        params.put("centro_cod", centro.getCodigo());
+        params.put("filial_cod", centro.getFilialCod());
+        params.put("empresa_cod", centro.getEmpresaCod());
+        params.put("cpfcnpj", cre.getCpfCnpj());
     }
 }

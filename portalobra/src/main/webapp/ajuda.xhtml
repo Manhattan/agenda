@@ -10,7 +10,7 @@
         <h:panelGroup id="dialogPanelAjuda" style='width: auto'>
             <p:dialog widgetVar="dlgAjuda" id="dlgAjuda" header="#{msg.ajuda}" resizable="false" >
                 <h:form id="centroAjuda">
-                    <p:hotkey bind="esc" oncomplete="dlgAjuda.hide()" async="true" global="false" /> 
+                    <p:hotkey bind="esc" oncomplete="PF('dlgAjuda').hide()" async="true" global="false" /> 
                     <p:panelGrid columnClasses="gridColumn, gridColumn, gridColumn" >
                         <p:row>
                             <p:column styleClass="gridRowHeader">

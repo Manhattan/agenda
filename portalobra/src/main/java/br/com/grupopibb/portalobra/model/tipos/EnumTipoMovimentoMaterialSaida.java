@@ -14,7 +14,7 @@ public enum EnumTipoMovimentoMaterialSaida {
     T("Transferência"),
     D("Devolução do Consumo"),
     V("Venda"),
-    I("Outras Saídas");
+    I("Outros");
     
     private String label;
 

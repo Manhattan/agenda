@@ -13,6 +13,7 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -46,12 +47,12 @@ public class OrcamentoController implements Serializable {
 
         root = new DefaultTreeNode(new SolicitacaoCompraItemOrcPlan(0, this.currentItem.getInsumoSub().getInsumoCod(), this.currentItem.getInsumoSub().getEspecificacao(), this.currentItem.getInsumoSub().getInsumo().getUnidade().getCodigo()));
         orcamentoBusiness.initDefaultTreeOrcamento(this.currentItem, this.root);
-
+        
         if (currentItem.getItensPlanoOrcamento() == null || currentItem.getItensPlanoOrcamento().isEmpty()) {
             orcamentoBusiness.initSolicItemOrcamento(this.currentItem, this.root);
         }
         orcamentoBusiness.initUpdatedTreeOrcamento(this.currentItem, this.root);
- 
+
         valorSoma = NumberUtils.formatDecimal(orcamentoBusiness.getSomaValores(root), 4);
     }
 
@@ -62,10 +63,18 @@ public class OrcamentoController implements Serializable {
             orcamentoBusiness.updateSolicItemOrcamento(this.currentItem, root);
             root = null;
             valorSoma = "0,0000";
-        } 
+        }
         return this.currentItem;
     }
+    
+    public boolean isValidationFailed(){
+        return FacesContext.getCurrentInstance().isValidationFailed();
+    }
 
+    public void solicIgualSaldo(SolicitacaoCompraItemOrcPlan itemPlan){
+        itemPlan.setValorSolic(itemPlan.getValorSaldo() + itemPlan.getValorSolicOriginal());
+    }
+    
     /**
      * Verifica se a grade de orçamento foi chamada por uma solicitação de
      * compra.
@@ -76,52 +85,13 @@ public class OrcamentoController implements Serializable {
         return solicitacao;
     }
 
-    /**
-     * Verifica se um insumo está em uma determinada lista e se possui itens de
-     * orçamento.
-     *
-     * @param insumos Lista de insumos.
-     * @param insumo Insumo a ser analisado.
-     * @return Verdadeiro ou Falso.
-     *
-     * private boolean isInsumoInListHasOrcamentoItem(List<Insumo> insumos,
-     * Insumo insumo) { if (InsumoBusiness.isInsumoInList(insumos, insumo)) {
-     * return (insumo.getItensPlanoOrcamento() != null); } else { return false;
-     * } }
-     */
-    /**
-     * Preenche os itens de orçamento do Insumo informado na lista de insumos.
-     *
-     * @param insumo Insumo distinto na lista.
-     *
-     * @return Insumo com os itens de orçamento.
-     */
-    /* private void initInsumoItemOrcamento(Insumo insumo) {
-     OrcamentoBusiness.initInsumoItemOrcamento(insumo, this.insumos, root);
-     }
-
-     /**
-     * Adiciona um insumo à lista de insumos. Será executado no momento que o
-     * item da solicitação de compra é criado. Esse insumo é único na lista.
-     *
-     * @param insumo
-     */
-    /*   private void addInsumoList(Insumo insumo) {
-     if (insumos == null) {
-     insumos = new ArrayList<>();
-     }
-     if (!InsumoBusiness.isInsumoInList(insumos, insumo) && insumo != null) {
-     insumos.add(insumo);
-     }
-     }
-     */
     public Double getSomaValores() {
         Double valor = orcamentoBusiness.getSomaValores(root);
         valor = NumberUtils.sumPositiveNumbers(NumberUtils.arredondarHalfUp(valor, 4), 0.0);
         valorSoma = NumberUtils.formatDecimal(valor, 4);
         return valor;
     }
-
+    
     public TreeNode getRoot() {
         return root;
     }

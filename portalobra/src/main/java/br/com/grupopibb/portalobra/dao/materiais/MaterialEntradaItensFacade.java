@@ -128,4 +128,10 @@ public class MaterialEntradaItensFacade extends AbstractEntityBeans<MaterialEntr
         params.put("insumoCod2", insumoCod == null ? "todos" : "filtro");
         params.put("insumoEspecificacao2", StringUtils.isBlank(insumoEspecificacao) ? "todos" : "filtro");
     }
+
+    public void clearCache() {
+        em.flush();
+        em.getEntityManagerFactory().getCache().evictAll();
+        em.clear();
+    }
 }

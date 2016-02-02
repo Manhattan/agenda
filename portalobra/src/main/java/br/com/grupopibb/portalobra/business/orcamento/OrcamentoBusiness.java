@@ -38,10 +38,9 @@ import org.primefaces.model.TreeNode;
 @Stateless
 @LocalBean
 public class OrcamentoBusiness {
-    
+
     @EJB
     private ConnectionFactory connectionFactory;
-    
     @PersistenceContext(unitName = UtilBeans.PERSISTENCE_UNIT)
     private EntityManager em;
 
@@ -333,10 +332,8 @@ public class OrcamentoBusiness {
         if (root != null) {
             for (TreeNode node : root.getChildren()) {
                 for (TreeNode item : node.getChildren()) {
-                    if (isItemOrcamentoInsumo(item)) {
-                        if (item != null && item.getData() != null) {
-                            soma += NumberUtils.isNull(((SolicitacaoCompraItemOrcPlan) item.getData()).getValorSolic(), 0.0);
-                        }
+                    if (isItemOrcamentoInsumo(item) && item != null && item.getData() != null) {
+                        soma += NumberUtils.isNull(((SolicitacaoCompraItemOrcPlan) item.getData()).getValorSolic(), 0.0);
                     }
                 }
             }
@@ -542,7 +539,6 @@ public class OrcamentoBusiness {
             stmt.close();
 
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
         }
 
         return numeroEvt;

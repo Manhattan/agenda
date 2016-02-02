@@ -1,51 +1,70 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:cc="http://java.sun.com/jsf/composite"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
+
+    <cc:interface>
+        <cc:attribute name="entityBean" required="true" />
+        <cc:attribute name="formName" required="true"/>
+        <cc:attribute name="listCentros" required="true"/>
+        <cc:attribute name="pageRender" required="true"/>
+        <cc:attribute name="widgetVar" required="false"/>
+    </cc:interface>
+
     <f:subview id="menuApp">
         <h:form id="menuForm">
-            <p:hotkey bind="esc" oncomplete="dlgCentroCusto.hide()" async="true" global="false" />
-            <p:menubar style="padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px; width: 100%">
+
+            <p:hotkey bind="esc" oncomplete="PF('dlgCentroCusto').hide()" async="true" global="false" />
+            <p:menubar style="padding-top: 5px; padding-bottom: 5px; margin-bottom: 5px; width: 100%; font-family:">
                 <p:submenu label="#{msg.principal}" icon="ui-icon-document" >
                     <p:menuitem value="#{msg.followUp}" action="followup" />
                     <p:separator />
                     <p:menuitem value="#{msg.sair}" action="#{loginController.logout()}" />
                 </p:submenu>
-
-                <p:submenu label="#{msg.consultas}" icon="ui-icon-search" >
-                    <p:menuitem value="#{msg.insumos}" icon="ui-icon-cart" actionListener="#{insumoController.desconsiderarLinkOrcamento()}" oncomplete="dlgConsultaInsumo.show()" />
-                    <p:menuitem value="#{msg.fornecedores}" icon="ui-icon-person" oncomplete="dlgConsultaCredor.show()" />
+                <p:submenu id="menuButtonConsultas" label="#{msg.consultas}" >
+                    <p:menuitem value="#{msg.insumos}" icon="ui-icon-cart" actionListener="#{insumoController.desconsiderarLinkOrcamento()}" oncomplete="PF('dlgConsultaInsumo').show()" />
+                    <p:menuitem value="#{msg.fornecedores}" icon="ui-icon-person" oncomplete="PF('dlgConsultaCredor').show()" />
                     <p:menuitem value="#{msg.estoqueMateriais}" icon="ui-icon-pin-s" action="materiais_estoque" />
                     <p:menuitem value="#{msg.saidaMateriais}" icon="ui-icon-circle-arrow-s" action="material_saida_itens" />
                 </p:submenu>
+                
+                <p:submenu id="menuButtonRelatorios" label="#{msg.relatorio}" >
+                    <p:menuitem value="#{msg.relatorioEstoqueMaterial}" icon="ui-icon-cart"  oncomplete="PF('dlgEstoqueMateriail').show()" />
+                    <p:menuitem value="#{msg.relatorioPosicaoPedidos}" icon="ui-icon-cart"  oncomplete="PF('dlgPosicaoPedidos').show()" />
+                    <p:menuitem value="#{msg.relatorioPosicaoContratos}" icon="ui-icon-cart"  oncomplete="PF('dlgPosicaoContrato').show()" />
+                </p:submenu>
 
-                <p:submenu label="#{msg.seguranca}" icon="ui-icon-locked" rendered="#{loginController.renderMenuSeguranca}" >
+                <p:submenu id ="menuButtonSegurança" label="#{msg.seguranca}" icon="ui-icon-locked" rendered="#{loginController.renderMenuSeguranca}" >
                     <p:menuitem value="#{msg.usuarios}" action="usuarios" disabled="#{!loginController.verUsuario}" />
                     <p:menuitem value="#{msg.perfilAcesso}" action="perfil" disabled="#{!loginController.verPerfil}" />
                     <p:menuitem value="#{msg.alterarSenha}" disabled="true" />
                     <p:menuitem value="#{msg.usuariosConectados}" action="conect_users" disabled="#{!loginController.verUsuariosConectados}" />
                 </p:submenu>
-
-                <p:submenu label="#{msg.utilitarios}" icon="ui-icon-wrench">
+                <p:submenu id="menuButtonUltilitarios" label="#{msg.utilitarios}" icon="ui-icon-wrench">
                     <p:menuitem value="#{msg.calculadora}" disabled="true" />
                 </p:submenu>
-
-                <p:submenu label="#{msg.ajuda}" icon="ui-icon-help">
-                    <p:menuitem value="#{msg.descricaoProcessos}" id="descProc" oncomplete="dlgAjuda.show()" update=":dialogForm" actionListener="#{followUpSolicitacoesController.createCurrent(null, 'dlgAjuda')}"/>
+                <p:submenu id="menuButtonAjuda" label="#{msg.ajuda}" icon="ui-icon-help">
+                    <p:menuitem value="#{msg.descricaoProcessos}" id="descProc" oncomplete="PF('dlgAjuda').show()" update=":dialogForm" actionListener="#{followUpSolicitacoesController.createCurrent(null, 'dlgAjuda')}"/>
                     <p:menuitem value="#{msg.reportarProblema}" id="repProb" url="#{msg.helpdeskLink}" target="_blank" />
                     <p:menuitem value="#{msg.comoUtilizar}" id="comUti" disabled="true" />
                     <p:menuitem value="#{msg.manualCompras}" id="manCom" url="#{msg.manualComprasLink}" target="_blank" />
                 </p:submenu>
 
-                <p:menuitem oncomplete="dlgCentroCusto.show()" update=":panelCentroCusto" value="#{loginController.centroSelecionado.nomeCompleto}" style="margin-left: 30%; width: 300px; font-size: small" />
+                <p:menuitem oncomplete="PF('dlgCentroCusto').show()" update=":panelCentroCusto" value="#{loginController.centroSelecionado.nomeCompleto}" style="margin-left: 30%; width: 300px; font-size: small" />
+
             </p:menubar>
+
+
         </h:form>
         <ui:include src="/ajuda.xhtml" />
         <ui:include src="/consulta/insumo.xhtml" />
         <ui:include src="/consulta/credor.xhtml" />
-
+        <ui:include src="/dialog/relatorio.xhtml"/>
+        <ui:include src="/dialog/relatorioPosicaoPedidos.xhtml"/>
+        <ui:include src="/dialog/relatorioPosicaoContrato.xhtml"/>
         <h:panelGroup id="pngPosCred">
             <ui:include src="/consulta/posicao_credor.xhtml" />
         </h:panelGroup>

@@ -23,7 +23,7 @@
                 <h:outputText value="#{documentoEntradaController.avisoRecebimento.data}" />
                 
                 <h:outputText value="#{msg.fornecedor}: " />
-                <p:commandButton value="#{documentoEntradaController.credor.razaoSocial == null ? msg.pesquisar : documentoEntradaController.credor.razaoSocial}" icon="#{documentoEntradaController.credor.razaoSocial == null ? 'ui-icon-search' : ''}" iconPos="right" style="width: 300px; text-align: left; margin-left: 5px; background-color: transparent; color: #{documentoEntradaController.credor.razaoSocial == null ? '#585b57' : 'blue'}" oncomplete="credorDialog.show()" update=":dialogForm" />
+                <p:commandButton value="#{documentoEntradaController.credor.razaoSocial == null ? msg.pesquisar : documentoEntradaController.credor.razaoSocial}" icon="#{documentoEntradaController.credor.razaoSocial == null ? 'ui-icon-search' : ''}" iconPos="right" style="width: 300px; text-align: left; margin-left: 5px; background-color: transparent; color: #{documentoEntradaController.credor.razaoSocial == null ? '#585b57' : 'blue'}" oncomplete="PF('credorDialog').show()" update=":dialogForm" />
                 
                 <h:outputText value="#{msg.numeroARAbrev}: " />
                 <h:outputText value="#{documentoEntradaController.avisoRecebimento.numero}" />
@@ -185,7 +185,7 @@
                                 </ui:repeat>
                                 <tr>
                                     <td style="border:none">
-                                        <p:commandButton value="" icon="ui-icon-circle-plus" oncomplete="pedidoItensDialog.show() #{pedidoItemController.pesquisar(loginController.centroSelecionado)}" update=":dialogForm" styleClass="button-only-icon" iconPos="left" />
+                                        <p:commandButton value="" icon="ui-icon-circle-plus" oncomplete="PF('pedidoItensDialog').show() #{pedidoItemController.pesquisar(loginController.centroSelecionado)}" update=":dialogForm" styleClass="button-only-icon" iconPos="left" />
                                     </td>
                                 </tr>
                             </table>

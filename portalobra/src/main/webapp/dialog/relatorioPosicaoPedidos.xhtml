@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
+                >
+    <f:subview id="relat_posicao_pedido">
+        <!-- Objeto de empresa, centro de custo e fornecedor -->
+        <p:dialog dynamic="true" 
+                  widgetVar="dlgPosicaoPedidos" 
+                  closeOnEscape="true" 
+                  modal="true"
+                  resizable="false" 
+                  showEffect="clip" 
+                  hideEffect="clip" 
+                  styleClass="dialog" 
+                  style="position: absolute; float: top; height: 100px" 
+                  position="center" 
+                  header="#{msg.relatorioPosicaoPedidos}"
+                  >
+            <p style="font-family: sans-serif; text-align: left; font-size: 20px">Relatório de posição de pedidos</p>
+            <h:form id="form_dialog_PosicaoPedidos" target="_blank">
+                <h:messages showDetail="true" showSummary="true" />
+                <p:panel>
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="#{msg.fornecedor}" for="select_credor"/>
+                        <p:selectOneMenu value="#{pedidoController.filtroCredor}" id="select_credor" converter="credorConverter" label="selectFornecedor" style="float: left" filter="true">
+                            <f:selectItem value="#{null}" itemLabel="" />
+                            <f:selectItems value="#{pedidoController.fornecedorSelected}" />
+                            <f:ajax render="select_centro btnAbrir"  listener="#{pedidoController.verifySelectsAreNull()}" />
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{msg.centro}" for="select_centro"/>
+                        <p:selectOneMenu  value="#{pedidoController.filtroCentroCusto}" id="select_centro" converter="centroCustoConverter" label="selectCentro" style="float: left">
+                            <f:selectItem value="#{null}" itemLabel="" />
+                            <f:selectItems value="#{pedidoController.centroSelected}" />
+                            <f:ajax render="select_pedido btnAbrir"  listener="#{pedidoController.verifySelectsAreNull()}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{msg.pedido} " for="select_pedido"/>
+                        <p:selectOneMenu  value="#{pedidoController.filtroPedido.idSistema}"  id="select_pedido" label="selectPedido" style="float: left">
+                            <f:selectItem value="#{null}" itemLabel="" />
+                            <f:selectItems value="#{pedidoController.pedidoSelectedString}" />
+                            <f:ajax render="select_pedido btnAbrir"  listener="#{pedidoController.verifySelectsAreNull()}" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:separator/>
+                    <h:panelGrid columns="3">
+                    <div style="float: left; font-weight: bold; text-align: left;">
+                        <p>Todas as caixas devem ser obrigatoriamente escolhidas.</p>
+                    </div>
+                    <p:commandButton ajax="false" id="btnAbrir" 
+                                     value="#{msg.executar}" 
+                                     action="#{pedidoController.abrirRelatorioPedidos()}"
+                                     icon="ui-icon-circle-check"
+                                     disabled="#{!pedidoController.enableButton}"/>
+                    <p:commandButton value="#{msg.cancelar}" 
+                                     oncomplete="PF('dlgPosicaoPedidos').hide()" 
+                                     icon="ui-icon-closethick" 
+                                     style="margin: 5px"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </p:dialog>
+    </f:subview>
+</ui:composition>

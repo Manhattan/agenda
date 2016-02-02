@@ -9,10 +9,15 @@
                 >
     <f:subview id="form-consulta-insumoSub">
         <h:panelGroup id="dialogPanelConsultaInsumoSub" style='margin-right: 0px; width: auto'>
-            <h:panelGroup id="pngUltSolicInclude">
-                <ui:include src="\ultimas_solicitacoes.xhtml" />
-            </h:panelGroup>
-            <p:dialog dynamic="true" widgetVar="dlgConsultaInsumo" resizable="false" styleClass="dialog" style="position: absolute; float: top" position="top" header="#{msg.insumo}" >
+            <p:dialog dynamic="true" 
+                      widgetVar="dlgConsultaInsumo" 
+                      closeOnEscape="true" 
+                      modal="true"
+                      resizable="false" 
+                      showEffect="clip" 
+                      hideEffect="clip" 
+                      position="center" 
+                      styleClass="dialog" style="position: absolute; float: top" header="#{msg.insumo}" >
                 <h:form id="formConsultaInsumoSub" >
                     <h:panelGroup id="panelTableInsumosSubConsultaPaginador" style='margin-right: 0px; width: auto'>
                         <table class="referencesmall" style='margin-right: 0px; margin-top: 0px; width: auto'>
@@ -64,7 +69,10 @@
                             <ui:repeat value="#{insumoSubController.items}" var="ins" varStatus="s">
                                 <tr>
                                     <td>
-                                        <p:commandButton value="" icon="ui-icon-cart" iconPos="left" styleClass="button-only-icon" actionListener="#{documentoEntradaItemController.initInsumo(ins.insumo)}" oncomplete="dlgUltSolic.show()" update=":menuApp:form-consulta-insumoSub:pngUltSolicInclude"  />
+                                        <p:commandButton value="" icon="ui-icon-cart" iconPos="left" styleClass="button-only-icon" oncomplete="PF('dlgEscolhaRelatorio').show()">
+                                            <f:setPropertyActionListener value="#{ins}" target="#{insumoSubController.current}" />
+                                        </p:commandButton>
+
                                     </td>
                                     <td>
                                         <h:outputText value="#{ins.idCompleto}" />
@@ -83,12 +91,75 @@
                                 </tr>
                             </ui:repeat>
                         </table>
+
+
+
                         <p:panel style="border: none">
                             <arq:paginator id="paginadorConsultaInsumo" entityBean="#{insumoSubController}" formName=":menuApp:form-consulta-insumoSub:formConsultaInsumoSub:panelTableInsumosSubConsultaPaginador" renderedNew="false"/>
                         </p:panel>
                     </h:panelGroup>
                 </h:form>  
             </p:dialog>
+            <h:panelGroup id="pngUltSolicInclude">
+                <ui:include src="\ultimas_solicitacoes.xhtml" />
+            </h:panelGroup>
         </h:panelGroup>
+        <!-- -->   
+        <!-- --> 
+        <!-- Dialodo de escolha de relatórios PDF ou EXCEL -->
+
+        <p:dialog 
+            closeOnEscape="true" 
+            modal="true"
+            resizable="false"
+            header="Últimas solicitações" 
+            widgetVar="dlgEscolhaRelatorio" 
+            showEffect="clip" 
+            hideEffect="clip" 
+            >
+            <p style="font-family: sans-serif; text-align: left; font-size: 20px">Relatório de últimas solicitações</p>
+            <h:form target="_blank">
+                <p:panel>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="#{msg.centro}" for="list-centro-custo"/>
+                        <p:selectOneMenu id="list-centro-custo" value="#{documentoEntradaItemController.centroFiltro}" filter="true" filterMatchMode="contains" style="float: left; position: relative; margin-right: 5px; text-align: left">
+                            <f:selectItem value="#{null}" itemLabel="" />
+                            <f:selectItems value="#{documentoEntradaItemController.centroSelect}" />
+                            <f:converter converterId="centroCustoConverter" />
+                            <f:ajax render="btnPdf btnExcel" listener="#{insumoSubController.verifyCentroIsNull(documentoEntradaItemController.centroFiltro)}"/>
+                        </p:selectOneMenu>
+
+                    </h:panelGrid>
+                    <p:separator/>
+                    <!-- -->   
+                    <!-- -->
+                    <!-- BOTÕES DE ACÇÃO PARA EXPORTAÇÃO DO INSUMO -->
+                    <p:panel>
+                        <p:panelGrid columns="2" >
+                            <p style="text-align: left;">Relatório será gerado na página em pdf.</p> 
+                            
+                            <p:commandButton disabled="#{!insumoSubController.enableBtnDialogUltimaSolic}" id="btnPdf" icon="ui-icon-script" style="float: right; margin-right: 0; " ajax="false" value="Relatório PDF" action="#{insumoSubController.generateReportInsumo(documentoEntradaItemControleler.insumoFiltro, documentoEntradaItemController.centroFiltro)}"/>
+
+                            <p style="text-align: left;">Será efetuado um download no formato xls(Excel).</p>
+                            <p:commandButton disabled="#{!insumoSubController.enableBtnDialogUltimaSolic}" id="btnExcel" icon="ui-icon-note"
+                                style="float: right; margin-right: 0;"
+                                             value="Exportar Excel" 
+                                             ajax="false"  
+                                             action="#{insumoSubController.generateExcelInsumo(documentoEntradaItemControleler.insumoFiltro, documentoEntradaItemController.centroFiltro)}"/>
+                            <p style="text-align: left;">Será exibido na própria pagina em forma de tabela.</p>
+                            <p:commandButton icon="ui-icon-newwin" style="float: right; margin-right: 0;" value="Exibir em Grade" oncomplete="PF('dlgUltSolic').show();" action="#{documentoEntradaItemController.pesquisar()}" update=":menuApp:form-consulta-insumoSub:svwUltSolic:pngUltSolic">
+                                <f:setPropertyActionListener value="#{insumoSubController.current}" target="#{documentoEntradaItemController.insumoFiltro}" />
+                            </p:commandButton>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:commandButton 
+                        oncomplete="PF('dlgEscolhaRelatorio').hide()" 
+                        icon="ui-icon-closethick"  
+                        value="#{msg.cancelar}" 
+                        style="margin-top: 8px;"/>
+                </p:panel>
+            </h:form>
+        </p:dialog>
+
     </f:subview>
 </ui:composition>

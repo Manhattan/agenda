@@ -6,6 +6,7 @@ package br.com.grupopibb.portalobra.business.pedido;
 
 import br.com.grupopibb.portalobra.model.tipos.EnumPrazoInicioPedido;
 import br.com.grupopibb.portalobra.utils.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -25,14 +26,16 @@ public class PedidoBusiness {
      * @return Texto completo descrevendo as formas de pagamento.
      */
     public static String getFormaPagamento(String prazoDias, String prazoPercentual, EnumPrazoInicioPedido prazoInicio) {
+        try{
         int size = prazoDias.length();
         String texto = "";
         try {
             for (int i = 0; i < size;) {
-                float percent = Float.parseFloat(prazoPercentual.substring(i, i + 3));
+                float percent = StringUtils.isBlank(prazoPercentual) ? 0f : Float.parseFloat(prazoPercentual.substring(i, i + 3));
                 int prazo = Integer.parseInt(prazoDias.substring(i, i + 3));
 
-                texto += NumberUtils.formatPercent(percent) + " com " + prazo + " dias, ";
+                texto += StringUtils.isBlank(prazoPercentual) ? "" : NumberUtils.formatPercent(percent) + " com ";
+                texto += prazo + " dias ";
                 i += 3;
             }
             texto += prazoInicio.getLabel();
@@ -40,5 +43,8 @@ public class PedidoBusiness {
             texto = "";
         }
         return texto;
+        } catch(NullPointerException e){
+            return "";
+        }
     }
 }

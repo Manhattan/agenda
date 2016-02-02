@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="2_subReport_Serviços_Contratados" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2538fc66-529e-4d18-93fd-5d16be0d3e73">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row" backcolor="#C0C0C0">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Detail" vAlign="Middle" fontSize="7"/>
+	<parameter name="Empresa_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Centro_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Cre_CGCCPF" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Pedido_Numero" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Filial_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select
+
+rtrim(Convert(Char(6),CExecServ.CExec_Numero)) + '/' + rtrim(Convert(char(6),CExecServ.CExecServ_Item)) AS 'Nª Serviço',
+G = 'C',
+Pedido.Pedido_CentroNumero AS 'Nº Pedido',
+CExecServ.CExecServ_Situacao AS 'Sit',
+substring(convert(char(6),CExecServ.Insumo_Cod+100000),2,5) AS 'Insumo',
+CExecServ.CExecServ_Especificacao AS 'Especificação',
+CExecServ.Unid_Cod AS 'Unidade' ,
+CExecServ.CExecServ_Quantidade AS 'Quantidade',
+CExecServ.CExecServ_PrecoUnitario AS 'Preço Unitário',
+CExecServ.CExecServ_PrecoServico AS 'Preço Serviço',
+
+coalesce(CExecServ.CExecServ_Quantidade,0) -
+(SELECT coalesce(sum(MedServ.MedServ_Quantidade),0)
+   from dbo.Contrato_Execucao_Medicao_Servico MedServ
+  WHERE (MedServ.CExec_Numero = CExecServ.CExec_Numero ) AND
+        (MedServ.CExecServ_Numero = CExecServ.CExecServ_Numero )) AS 'Quantidade aMedir',
+
+
+(( coalesce(CExecServ.CExecServ_Quantidade,0) -
+(SELECT coalesce(sum(MedServ.MedServ_Quantidade),0)
+   from dbo.Contrato_Execucao_Medicao_Servico MedServ
+  WHERE (MedServ.CExec_Numero = CExecServ.CExec_Numero ) AND
+        (MedServ.CExecServ_Numero = CExecServ.CExecServ_Numero )) )* CExecServ.CExecServ_PrecoUnitario) AS 'Valor Medir'
+
+from dbo.Contrato_Execucao_Servicos CExecServ,
+     dbo.Contrato_Execucao CExec,
+     dbo.Local_de_Producao_PO LP,
+     dbo.Imovel_Pavimento ImoPav,
+     dbo.Unidade_Construtiva UC,
+
+     dbo.Projeto_ItemOrcPlan PIOP,
+
+     dbo.Pedido Pedido,
+     dbo.Credor Credor,
+     dbo.Centro_de_Custo Centro
+
+
+where CExecServ.LP_Numero = LP.LP_Numero
+  and CExecServ.UC_Numero = UC.UC_Numero
+  and LP.ImoPav_Cod *= ImoPav.ImoPav_Cod
+
+  and CExec.CExec_Numero = CExecServ.CExec_Numero
+
+  and CExec.Pedido_Numero = Pedido.Pedido_Numero -- OK
+  and CExec.Cre_Cod = Credor.Cre_Cod -- OK
+
+  and CExec.Empresa_Cod = Centro.Empresa_Cod
+  and CExec.Filial_Cod = Centro.Filial_Cod
+  and CExec.Centro_Cod = Centro.Centro_Cod
+
+  and CExec.Empresa_Cod = $P{Empresa_Cod}
+  and CExec.Filial_Cod = $P{Filial_Cod}
+  and CExec.Centro_Cod = $P{Centro_Cod}
+  and Cre_CGCCPF = $P{Cre_CGCCPF}
+
+  and CExecServ.OrcPlan_Cod *= PIOP.OrcPlan_Cod
+  and CExecServ.ItemOrcPlan_Cod *= PIOP.ItemOrcPlan_Cod
+
+  and ( Pedido.Pedido_Numero = $P{Pedido_Numero} or $P{Pedido_Numero} is null )]]>
+	</queryString>
+	<field name="Nª Serviço" class="java.lang.String"/>
+	<field name="G" class="java.lang.String"/>
+	<field name="Nº Pedido" class="java.lang.Integer"/>
+	<field name="Sit" class="java.lang.String"/>
+	<field name="Insumo" class="java.lang.String"/>
+	<field name="Especificação" class="java.lang.String"/>
+	<field name="Unidade" class="java.lang.String"/>
+	<field name="Quantidade" class="java.math.BigDecimal"/>
+	<field name="Preço Unitário" class="java.lang.Double"/>
+	<field name="Preço Serviço" class="java.math.BigDecimal"/>
+	<field name="Quantidade aMedir" class="java.math.BigDecimal"/>
+	<field name="Valor Medir" class="java.lang.Double"/>
+	<variable name="totalPrecoServico" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Preço Serviço}]]></variableExpression>
+	</variable>
+	<variable name="totalQuantMedir" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor Medir}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="132" height="20" uuid="3b22fe56-b224-49f9-89bb-53dde04731d5"/>
+				<textElement>
+					<font size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Serviços Contratados:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="3" width="46" height="20" uuid="ebcfbdef-68da-4299-8cf5-950f746eb0c7"/>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nª Serviço]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="3" width="26" height="20" uuid="3129d2f4-18cd-4e0d-aab4-61eacc35a81e"/>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Orig]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="77" y="3" width="43" height="20" uuid="8a0b88e5-c5a2-491f-b8ff-001720b63b2f"/>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nº Pedido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="3" width="29" height="20" uuid="14d7a6b4-5c2b-4538-b7b2-b63e8c807156"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Sit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="153" y="3" width="43" height="20" uuid="191e058c-aded-4c52-996a-9df99a74cf64"/>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Insumo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="3" width="318" height="20" uuid="290ebeb5-c57d-4d64-b572-213926bfa2f3"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Especificação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="514" y="3" width="45" height="20" uuid="594b88e4-9201-4b03-8831-c4a65a5ef9a7"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Unidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="559" y="3" width="56" height="20" uuid="d6420fdf-9114-41a6-8e8c-076c84ba6a51"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Quantidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="746" y="3" width="56" height="20" uuid="bdd755e0-a3c2-4370-b81f-8af0276e2496"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Valor Medir]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="615" y="0" width="38" height="23" uuid="fad4cd6b-ea4c-44da-9f00-d3e2548b4021"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Preço Unitário]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="653" y="0" width="38" height="23" uuid="3d2b089c-3d59-4ad1-9c41-ab92791e378e"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Preço Serviço]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="691" y="0" width="55" height="23" uuid="6c335cb0-882a-4ced-9ac9-12e7c5719fcd"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Quantidade aMedir]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<frame>
+				<reportElement style="row" x="0" y="0" width="802" height="14" uuid="25f8ade3-9dff-436b-abd5-96c7c0394637"/>
+				<textField>
+					<reportElement style="Detail" x="0" y="0" width="46" height="14" uuid="c4ce6fa6-2552-4c73-a30f-fee0a7ffd397"/>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nª Serviço}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="48" y="0" width="26" height="14" uuid="21cedf36-93fa-497b-bf88-35fe956278aa"/>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{G}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="77" y="0" width="43" height="14" uuid="bb963066-a419-4e55-b892-dcdf6fa3c481"/>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nº Pedido}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="122" y="0" width="29" height="14" uuid="916a2894-9301-4302-a926-3d082d12674a"/>
+					<textElement textAlignment="Center">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Sit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="153" y="0" width="43" height="14" uuid="2d9579ce-3ba2-4f71-9609-ed9fcd438df6"/>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Insumo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="196" y="0" width="318" height="14" uuid="f9f7e76c-bc57-4f0c-9638-c9ac2bd75469"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Especificação}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="514" y="0" width="45" height="14" uuid="858d2eb8-60fa-41d5-8152-07231f6aa9d6"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Unidade}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="559" y="0" width="56" height="14" uuid="ffd3f140-ce1c-498a-98fa-49fb6b294b7b"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Quantidade}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="615" y="0" width="38" height="14" uuid="68f51fcb-f6bd-4c00-bf3e-2ca6ab0baf6c"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Preço Unitário}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="653" y="0" width="38" height="14" uuid="0449c1f7-8543-44bc-a9df-1402900eae87"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Preço Serviço}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="691" y="0" width="55" height="14" uuid="9bc14999-64a0-47d3-b36e-514449733862"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Quantidade aMedir}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="746" y="0" width="56" height="14" uuid="0bb609a4-5ad0-4e91-ba34-198f419658f5"/>
+					<textElement textAlignment="Right">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Valor Medir}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="23" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="802" height="1" uuid="354851ae-a658-4288-ac31-030d36f400f1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="22" width="802" height="1" uuid="110f8236-09f5-4112-a8d4-9fa32243db56"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="1" width="100" height="22" uuid="4a9dcb36-baf7-4f05-b8d5-f94c789569b4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Serviços:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="604" y="0" width="87" height="21" uuid="39e7cf96-b0db-42b3-b9b1-5c713eedf08e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalPrecoServico}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="723" y="1" width="79" height="21" uuid="676f9ecb-e8d7-4a7e-9667-d2689d39fcc2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalQuantMedir}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

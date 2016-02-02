@@ -13,9 +13,9 @@ body {
     color: red !important;
 }
 .contentCentral{
-    min-height: 300px;
+    min-height: 500px;
     _height: auto !important;
-    height: 300px;
+    height: 500px;
 }
 
 a img {
@@ -25,6 +25,7 @@ a img {
 
 a {
     text-decoration: underline;
+    color: #2d4c72;
 }
 
 a:hover {
@@ -36,7 +37,7 @@ a:active {
 }
 
 a:visited {
-    color: #B2D1FF;
+    color: #2d4c72;
 }
 
 .wrapper {
@@ -52,6 +53,18 @@ a:visited {
     vertical-align: top;
     text-align: center;
     margin-right: 5px;
+}
+.menu2{
+    
+    width: 1435px; margin: 0 auto; padding: 0px; background: #ffffff;
+    vertical-align: top;
+    text-align: center;
+    margin-right: 5px;
+}
+.paginaLayout{
+    
+    width: 1450px; margin: 0 auto; padding: 0px; background: #ffffff;
+    box-shadow: 5px 4px 10px #333, -5px -5px 10px #ccc;
 }
 
 .content {
@@ -126,7 +139,7 @@ table.referencesmall {
     margin-left: 0px;
 }
 table.referencesmall th { 
-    background-color: #808080;
+    background-color: #2d4c72;
     border:1px solid #c3c3c3;
     border-radius: 5px;
     padding:4px;
@@ -134,19 +147,17 @@ table.referencesmall th {
     width: auto;
     font-size: 0.9em;
     color: white;
-    background: #808080 url("#{resource['primefaces-redmond:images/ui-bg_gloss-wave_55_5c9ccc_500x100.png']}") 50% 50% repeat-x;
 }
 
 table.referencesmall tr.cabecalhoDiscreto th { 
-    background-color: #d5d5d5;
+    background-color: #2d4c72;
     border:1px solid #c3c3c3;
     vertical-align:central; 
     width: auto;
     margin-right: 0px;
     padding-right: 0px;
     font-size: 0.9em;
-    color: black;
-    background: #ebebeb url("#{resource['primefaces-redmond:images/ui-bg_gloss-wave_55_5c9ccc_500x100.png']}") 50% 50% repeat-x;
+    color: white;
 }
 
 table.referencesmall tr.hovered:hover{
@@ -327,7 +338,10 @@ table.itensTable tfoot {
 } 
 
 .itemColumEspaco{
+    border-collapse: collapse;
+    color: gray;
     padding: 5px;
+    border: solid 1px;
 }
 
 .button-field {
@@ -418,6 +432,7 @@ table.itensTable tfoot {
     height: 20px; 
     margin-right: 5px;
 }
+
 
 .commandlink-field {
     text-decoration: none;
@@ -518,15 +533,11 @@ leftColumn{
 }
 
 table.noFormatColumn{
-    border: none;
+    border-color: transparent;
 }
 
-table.noFormatColumn tr{
-    border: none;
-}
-
-table.noFormatColumn td{
-    border:none;
+table.noFormatColumn tr, td{
+    border-color: transparent;
 }
 
 .selectPequeno{

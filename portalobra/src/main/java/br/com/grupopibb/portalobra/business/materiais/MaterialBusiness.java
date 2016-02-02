@@ -4,16 +4,20 @@
  */
 package br.com.grupopibb.portalobra.business.materiais;
 
+import br.com.grupopibb.portalobra.dao.materiais.MateriaisEstoqueFacade;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
-import br.com.grupopibb.portalobra.model.insumo.Insumo;
 import br.com.grupopibb.portalobra.model.insumo.InsumoSub;
+import br.com.grupopibb.portalobra.model.materiais.MateriaisEstoque;
 import br.com.grupopibb.portalobra.model.materiais.MaterialEntrada;
 import br.com.grupopibb.portalobra.model.materiais.MaterialEntradaItens;
 import br.com.grupopibb.portalobra.model.materiais.MaterialSaida;
 import br.com.grupopibb.portalobra.model.materiais.MaterialSaidaItens;
+import br.com.grupopibb.portalobra.utils.DateUtils;
 import br.com.grupopibb.portalobra.utils.NumberUtils;
 import br.com.grupopibb.portalobra.utils.UtilBeans;
 import java.math.BigDecimal;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -32,6 +36,7 @@ public class MaterialBusiness {
 
     @PersistenceContext(unitName = UtilBeans.PERSISTENCE_UNIT)
     private EntityManager em;
+   
 
     protected EntityManager getEntityManager() {
         return em;
@@ -77,23 +82,6 @@ public class MaterialBusiness {
     }
 
     /**
-     * Verifica se a lista de itens do Material de Entrada contém o Insumo
-     * passado como parâmetro.
-     *
-     * @param matEnt Material de Entrada que contém a lista de itens.
-     * @param insumo Insumo a ser comparado.
-     * @return Verdadeiro ou falso.
- 
-    public boolean isContainsInsumo(MaterialEntrada matEnt, Insumo insumo) {
-        for (MaterialEntradaItens item : matEnt.getItens()) {
-            if (item.getInsumo().getCodigo() == insumo.getCodigo()) {
-                return true;
-            }
-        }
-        return false;
-    }    */
-
-    /**
      * Verifica se a lista de itens do Material de Entrada contém o SubInsumo
      * passado como parâmetro.
      *
@@ -121,10 +109,10 @@ public class MaterialBusiness {
             Integer itemNum = incrementItemMatEntrada(materialEntrada);
             String itemItem = "000" + String.valueOf(itemNum);
             itemItem = StringUtils.substring(itemItem, (itemItem.length() - 3));
-            return new MaterialEntradaItens(materialEntrada, itemNum, itemItem, 
-                    itemSaida.getInsumoSub(), itemSaida.getQuantidade(), itemSaida.getValor(), 
-                    materialEntrada.getDataEntrada(), materialEntrada.getCentro().getEmpresaCod(), 
-                    materialEntrada.getCentro().getFilialCod(), materialEntrada.getCentro().getCodigo(), 
+            return new MaterialEntradaItens(materialEntrada, itemNum, itemItem,
+                    itemSaida.getInsumoSub(), itemSaida.getQuantidade(), itemSaida.getValor(),
+                    materialEntrada.getDataEntrada(), materialEntrada.getCentro().getEmpresaCod(),
+                    materialEntrada.getCentro().getFilialCod(), materialEntrada.getCentro().getCodigo(),
                     itemSaida.getObservacao(), itemSaida.getMaterialSaida().getNumeroSaida(), itemSaida.getNumero());
         } else {
             return null;
@@ -138,17 +126,38 @@ public class MaterialBusiness {
      * @param materialEntrada
      * @return
      */
-    private Integer incrementItemMatEntrada(MaterialEntrada materialEntrada) {
-        if (materialEntrada != null && materialEntrada.getItens() != null) {
+    public Integer incrementItemMatEntrada(MaterialEntrada entrada) {
+        try {
             Integer itemMaior = 1;
-            for (MaterialEntradaItens item : materialEntrada.getItens()) {
+            for (MaterialEntradaItens item : entrada.getItens()) {
                 while (item.getNumero() >= itemMaior) {
                     itemMaior++;
                 }
             }
             return itemMaior;
-        } else {
+        } catch (NullPointerException e) {
             return 1;
+        }
+    }
+
+    /**
+     * Reorganiza o código dos itens de entrada;
+     *
+     * @param entrada
+     */
+    public void decrementItemMaterialEntrada(MaterialEntrada entrada) {
+        try {
+            Integer itemAtual = 1;
+            for (MaterialEntradaItens item : entrada.getItens()) {
+                if (item.getNumero() >= itemAtual) {
+                    int index = entrada.getItens().indexOf(item);
+                    item.setNumero(itemAtual);
+                    item.setItemItem(StringUtils.right("000" + itemAtual.toString(), 3));
+                    entrada.getItens().set(index, item);
+                    itemAtual++;
+                }
+            }
+        } catch (NullPointerException e) {
         }
     }
 
@@ -169,4 +178,30 @@ public class MaterialBusiness {
             return 0.0;
         }
     }
+
+//    public boolean isValidaMaterialSaida(List<MaterialSaidaItens> itens, CentroCusto centroCusto) {;
+//
+//        for (MaterialSaidaItens item : itens) {
+//
+//            materiaisEstoque = materiaisEstoqueFacade.findParam(centroCusto, item.getInsumoSub(), DateUtils.getDataFormatada("yyyy/MM", item.getDataSaida()).replace("/", ""));
+//            double estoqueAtual = materiaisEstoque.getEstoqueQuantidade();
+//            double somaQuantItem = 0;
+//
+//            for (MaterialSaidaItens item2 : itens) {
+//
+//                if (item.getId() == item2.getId()) {
+//                    somaQuantItem = item.getQuantidade() + item2.getQuantidade();
+//                    if (somaQuantItem > estoqueAtual) {
+//
+//                        return false;
+//
+//                    }
+//                }
+//
+//            }
+//
+//
+//        }
+//        return true;
+//    }
 }

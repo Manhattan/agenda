@@ -82,6 +82,14 @@ import javax.persistence.Transient;
 })
 public class MateriaisEstoque implements EntityInterface<MateriaisEstoque> {
 
+    public MateriaisEstoque() {
+    }
+
+    public MateriaisEstoque(InsumoSub insumoSub, CentroCusto centro) {
+        this.insumoSub = insumoSub;
+        this.centro = centro;
+    }
+
     @Id
     @Column(name = "Insumo_Cod")
     private Long insumoCod;

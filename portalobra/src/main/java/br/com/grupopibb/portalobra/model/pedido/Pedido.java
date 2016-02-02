@@ -39,7 +39,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 /**
+ * ,
  *
+ * @NamedQuery(name = "Pedido.EmpFornec", query = " SELECT P FROM Pedido P JOIN
+ * P.credor C JOIN P.centroCusto CC WHERE (C )"
  * @author tone.lima
  */
 @Entity
@@ -47,7 +50,20 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(name = "Pedido.find",
             query = " SELECT p FROM Pedido p "
-            + " WHERE p.numero = :id")
+            + " WHERE p.numero = :id"),
+    @NamedQuery(name = "Pedido.EmpFornec",
+            query = " SELECT p FROM Pedido p, CentroCusto CC, Credor C "
+            + " WHERE p.credor.codigo = C.codigo "
+            + " AND p.centroCusto.empresaCod = CC.empresaCod "
+            + " AND p.centroCusto.filialCod = CC.filialCod "
+            + " AND p.centroCusto.codigo = CC.codigo "
+            + " AND CC.empresaCod = :empresa_cod "
+            + " AND CC.filialCod = :filial_cod "
+            + " AND CC.codigo = :centro_cod "
+            + " AND C.cpfCnpj = :cpfCnpj "),
+    @NamedQuery(name = "Pedido.CentroCusto",
+            query = " SELECT  p FROM Pedido p join p.credor c "
+            + " WHERE c.cpfCnpj = :cpfCnpj"),
 })
 public class Pedido implements EntityInterface<Pedido> {
 
@@ -124,7 +140,7 @@ public class Pedido implements EntityInterface<Pedido> {
     private String auditUserName;
     /*
      */
-    @Column(name = "Pedido_Observacao")
+    @Column(name = "Pedido_Observacao", columnDefinition = "varchar")
     private String observacao;
     /*
      */
@@ -396,7 +412,7 @@ public class Pedido implements EntityInterface<Pedido> {
 
     @Override
     public String getLabel() {
-        return this.idSistema.toString();
+        return this.numero.toString();
     }
 
     @Override

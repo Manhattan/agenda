@@ -16,11 +16,11 @@
                         <h:outputText value="#{msg.periodoSaidas}:" style="font-weight: bold" />
                         <p:inputText value="#{loginController.centroSelecionado.nomeCompleto}" readonly="true"  style="width: 90%" />
                         <h:panelGroup>
-                            <p:calendar  value="#{materialSaidaController.dataInicial}" size="11" maxlength="10"  id="dataInicialMatSai" 
-                                         onkeypress="AtalhoData(event, this)" onchange="AtualizaData(this)"
-                                         title="#{msg.dataInicial}" pattern="dd/MM/yyyy" pagedate="utilsController.getDate()" locale="pt" mode="popup"
-                                         navigator="true" immediate="true"
-                                         timeZone="#{initParam['timezone']}" >
+                            <p:calendar value="#{materialSaidaController.dataInicial}" size="11" maxlength="10"  id="dataInicialMatSai" 
+                                        onkeypress="AtalhoData(event, this)" onchange="AtualizaData(this)"
+                                        title="#{msg.dataInicial}" pattern="dd/MM/yyyy" pagedate="utilsController.getDate()" locale="pt" mode="popup"
+                                        navigator="true" immediate="true"
+                                        timeZone="#{initParam['timezone']}" >
                             </p:calendar>
                             <h:outputText value=" a " style="margin-left: 5px; margin-right: 5px" />
                             <p:calendar value="#{materialSaidaController.dataFinal}" size="11" maxlength="10"  id="dataFinalMatSai"
@@ -59,10 +59,10 @@
                             <ui:repeat value="#{materialSaidaController.items}" var="item" varStatus="s">
                                 <tr>
                                     <td>
-                                        <p:commandButton icon="ui-icon-arrow-1-e" iconPos="left" value="" style="height: 15px; width: 25px" styleClass="button-only-icon" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('S', item.numeroSaida)}" oncomplete="dlgMatSai.hide()" actionListener="#{materialSaidaController.clean()}" update=":panelSaidaMaterialF" />
+                                        <p:commandButton icon="ui-icon-arrow-1-e" iconPos="left" value="" style="height: 15px; width: 25px" styleClass="button-only-icon" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('S', item.numeroSaida)}" oncomplete="PF('dlgMatSai').hide()" actionListener="#{materialSaidaController.clean()}" update=":panelSaidaMaterialF" />
                                     </td>
                                     <td>
-                                        <p:commandLink value="#{item.numeroSaida}" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('S', item.numeroSaida)}" oncomplete="dlgMatSai.hide()" actionListener="#{materialSaidaController.clean()}" update=":panelSaidaMaterialF" style="margin: 0px 15px 0px 15px" styleClass="tableLinkField" />
+                                        <p:commandLink value="#{item.numeroSaida}" action="#{followUpSolicitacoesController.prepareEditEntradaOrSaida('S', item.numeroSaida)}" oncomplete="PF('dlgMatSai').hide()" actionListener="#{materialSaidaController.clean()}" update=":panelSaidaMaterialF" style="margin: 0px 15px 0px 15px" styleClass="tableLinkField" />
                                     </td>
                                     <td>
                                         <h:outputText value="#{item.dataSaida}" style="margin: 0px 15px 0px 15px" >

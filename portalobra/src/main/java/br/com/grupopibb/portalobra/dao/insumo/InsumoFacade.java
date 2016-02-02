@@ -37,6 +37,8 @@ public class InsumoFacade extends AbstractEntityBeans<Insumo, Long> {
     public InsumoFacade() {
         super(Insumo.class, InsumoFacade.class);
     }
+    
+    
 
     @Override
     protected EntityManager getEntityManager() {
@@ -44,6 +46,7 @@ public class InsumoFacade extends AbstractEntityBeans<Insumo, Long> {
     }
 
     public Insumo find(final String id) {
+        
         Map<String, Object> params = getMapParams();
         paramsPaginacao(params, id);
         return pesqParam("Insumo.find", params);

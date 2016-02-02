@@ -7,7 +7,15 @@
                 xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
                 >
     <f:subview id="viewConsultaCredor">
-        <p:dialog id="credorConsultaDialog" header="#{msg.fornecedor}" onHide="#{credorController.cleanSearch()}"  widgetVar="dlgConsultaCredor" style="position: absolute; float: top" position="top"  closeOnEscape="true" resizable="false" >
+        <p:dialog id="credorConsultaDialog" 
+                  header="#{msg.fornecedor}" 
+                  onHide="#{credorController.cleanSearch()}"  
+                  widgetVar="dlgConsultaCredor" 
+                  style="position: absolute; float: top" 
+                  position="top"  
+                  closeOnEscape="true" 
+                  modal="true"
+                  resizable="false" >
             <h:form id="formConsultaCredor">
                 <p:panelGrid columns="4" styleClass="noFormatColumn">
                     <h:panelGroup style="margin-right: 20px">
@@ -74,11 +82,11 @@
                         <ui:repeat value="#{credorController.items}" var="item" varStatus="x">
                             <tr>
                                 <td>
-                                    <p:commandButton actionListener="#{posicaoCredorController.initCredor(item)}" update=":menuApp:pngPosCred" oncomplete="dlgPosCred.show()" value="" icon="ui-icon-cart" iconPos="left" styleClass="button-only-icon" />
+                                    <p:commandButton actionListener="#{posicaoCredorController.initCredor(item)}" update=":menuApp:pngPosCred" oncomplete="PF('dlgPosCred').show()" value="" icon="ui-icon-cart" iconPos="left" styleClass="button-only-icon" />
                                 </td>
                                 <td>
                                     <h:commandLink class="button-field2" value="#{item.codigo}" style="text-align: left;" >
-                                        <p:ajax oncomplete="dlgFornecedor.show()" listener="#{credorController.initCurrent(item)}" update=":menuApp:pnlFornecedor" />
+                                        <p:ajax oncomplete="PF('dlgFornecedor').show()" listener="#{credorController.initCurrent(item)}" update=":menuApp:pnlFornecedor" />
                                     </h:commandLink>
                                 </td>
                                 <td align='left'>

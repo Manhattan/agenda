@@ -7,7 +7,7 @@
     <context-param>
         <param-name>com.sun.faces.enableMissingResourceLibraryDetection</param-name>
         <param-value>true</param-value>
-    </context-param>   
+    </context-param>
     <context-param>
         <param-name>timezone</param-name>
         <param-value>GMT-3</param-value>
@@ -27,6 +27,7 @@
         <url-pattern>*.xhtml</url-pattern>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
+    
     <session-config>
         <session-timeout>
             60
@@ -35,10 +36,8 @@
     <welcome-file-list>
         <welcome-file>login.xhtml</welcome-file>
     </welcome-file-list>
-    
-    <error-page>  
-        <exception-type>javax.faces.application.ViewExpiredException</exception-type>  
-        <location>/semPermissao.xhtml</location>  
-    </error-page> 
-    
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/semPermissao.xhtml</location>
+    </error-page>
 </web-app>

@@ -60,7 +60,7 @@
                             <ui:repeat value="#{credorController.items}" var="item" varStatus="x">
                                 <tr>
                                     <td>
-                                        <p:commandButton id="selectCredorBtn" actionListener="#{documentoEntradaController.selecionaCredor(item)}" action="#{pedidoItemController.selecionaCredor(item)}" title="#{msg.selecione}" icon="ui-icon-circle-check" iconPos="left" value="" styleClass="button-only-icon" update=":formMain:arPanelTopo, :dialogForm" oncomplete="credorDialog.hide()" />
+                                        <p:commandButton id="selectCredorBtn" actionListener="#{documentoEntradaController.selecionaCredor(item)}" action="#{pedidoItemController.selecionaCredor(item)}" title="#{msg.selecione}" icon="ui-icon-circle-check" iconPos="left" value="" styleClass="button-only-icon" update=":formMain:arPanelTopo, :dialogForm" oncomplete="PF('credorDialog').hide()" />
                                     </td>
                                     <td>#{item.codigo}</td>
                                     <td>#{item.razaoSocial}</td>

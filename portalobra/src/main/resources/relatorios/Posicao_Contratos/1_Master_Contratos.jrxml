@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="67ed9ef2-67dd-4944-9536-0a5158fa9caf">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row" backcolor="#C0C0C0">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Detail" vAlign="Middle" fontSize="10"/>
+	<parameter name="Emp_Nome" class="java.lang.String"/>
+	<parameter name="Pedido_CentroNumero" class="java.lang.String"/>
+	<parameter name="Centro_Nome" class="java.lang.String"/>
+	<parameter name="Cre_Cod_RazSoc" class="java.lang.String"/>
+	<parameter name="Empresa_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Filial_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Centro_Cod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Cre_CGCCPF" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Pedido_Numero" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\tone.lima\\Documents\\NetBeansProjects\\portalobra\\portalobra\\src\\main\\resources\\relatorios\\Posicao_Contratos\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMAGE_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT Pedido_Numero
+FROM dbo.Pedido
+WHERE Empresa_Cod = $P{Empresa_Cod}
+and Filial_Cod = $P{Filial_Cod}
+and Centro_Cod = $P{Centro_Cod}
+and Pedido_Numero = $P{Pedido_Numero}]]>
+	</queryString>
+	<field name="Pedido_Numero" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="101">
+			<textField>
+				<reportElement x="80" y="5" width="348" height="20" uuid="3a86d08d-e140-43f2-86ec-af8865ead30a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{Emp_Nome}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="802" height="68" uuid="3327e5a9-841b-48f3-ad56-bd2df596d1f7"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="80" y="25" width="201" height="20" uuid="f69000ce-f77e-4dea-8f75-6ff3e246e37d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Relatório de Contrato - Prestador de Serviço - Pedido:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="281" y="25" width="89" height="20" uuid="a612b8e5-2613-413a-a4e3-041e023f84bc"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Pedido_CentroNumero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="41" width="229" height="25" uuid="76baa4dd-447e-4086-b07f-ed35fa8eacc7"/>
+				<textElement textAlignment="Center">
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Centro_Nome}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="73" width="802" height="28" uuid="320c29a3-eb74-49fb-bfcf-b628f690620b"/>
+			</rectangle>
+			<textField>
+				<reportElement x="252" y="77" width="299" height="21" uuid="0eb45277-8635-4216-a3ea-7938a55df6f6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Cre_Cod_RazSoc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="626" y="25" width="66" height="20" uuid="4e29e1d6-0194-49b0-bdd9-f1d784e5034b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Impresso em:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="692" y="25" width="100" height="20" uuid="73c03bf9-69af-48d1-a630-b97d27976072"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="700" y="5" width="80" height="20" uuid="23449c1f-c858-4174-8f8d-6ecbfc01c6ce"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="780" y="5" width="12" height="20" uuid="f245f39e-2a60-4492-bd69-6443a29773b3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center">
+				<reportElement x="0" y="12" width="80" height="49" uuid="cf37a39c-d927-4b63-8997-0f19e9fe1032"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR}+"logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="40" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="4f04aea8-18f0-4e23-bb3c-c10795908038"/>
+				<subreportParameter name="Empresa_Cod">
+					<subreportParameterExpression><![CDATA[$P{Empresa_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Filial_Cod">
+					<subreportParameterExpression><![CDATA[$P{Filial_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Cre_CGCCPF">
+					<subreportParameterExpression><![CDATA[$P{Cre_CGCCPF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Centro_Cod">
+					<subreportParameterExpression><![CDATA[$P{Centro_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Pedido_Numero">
+					<subreportParameterExpression><![CDATA[$P{Pedido_Numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "1_subReport_Pedidos_Contratos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="40">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="40" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="8d175d19-c885-4f50-875b-5744e93cd05b"/>
+				<subreportParameter name="Empresa_Cod">
+					<subreportParameterExpression><![CDATA[$P{Empresa_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Filial_Cod">
+					<subreportParameterExpression><![CDATA[$P{Filial_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Cre_CGCCPF">
+					<subreportParameterExpression><![CDATA[$P{Cre_CGCCPF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Centro_Cod">
+					<subreportParameterExpression><![CDATA[$P{Centro_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Pedido_Numero">
+					<subreportParameterExpression><![CDATA[$P{Pedido_Numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "2_subReport_Serviços_Contratados.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="40">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="40" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="ead05086-91cf-46cf-873f-fce6b4c7c9b7"/>
+				<subreportParameter name="Empresa_Cod">
+					<subreportParameterExpression><![CDATA[$P{Empresa_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Filial_Cod">
+					<subreportParameterExpression><![CDATA[$P{Filial_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Cre_CGCCPF">
+					<subreportParameterExpression><![CDATA[$P{Cre_CGCCPF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Centro_Cod">
+					<subreportParameterExpression><![CDATA[$P{Centro_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Pedido_Numero">
+					<subreportParameterExpression><![CDATA[$P{Pedido_Numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "3_subReport_Notas_Ficais.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="40">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="40" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="0d7ed016-ec1c-4a02-a684-c723fdc12e64"/>
+				<subreportParameter name="Empresa_Cod">
+					<subreportParameterExpression><![CDATA[$P{Empresa_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Filial_Cod">
+					<subreportParameterExpression><![CDATA[$P{Filial_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Cre_CGCCPF">
+					<subreportParameterExpression><![CDATA[$P{Cre_CGCCPF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Centro_Cod">
+					<subreportParameterExpression><![CDATA[$P{Centro_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Pedido_Numero">
+					<subreportParameterExpression><![CDATA[$P{Pedido_Numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "4_subReport_Posicao_Financeira.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="40">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="40" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="b905a483-70fe-4717-8c75-82786ef327ad"/>
+				<subreportParameter name="Empresa_Cod">
+					<subreportParameterExpression><![CDATA[$P{Empresa_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Filial_Cod">
+					<subreportParameterExpression><![CDATA[$P{Filial_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Cre_CGCCPF">
+					<subreportParameterExpression><![CDATA[$P{Cre_CGCCPF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Centro_Cod">
+					<subreportParameterExpression><![CDATA[$P{Centro_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Pedido_Numero">
+					<subreportParameterExpression><![CDATA[$P{Pedido_Numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "5_subReport_Retencao_Contratual.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="40">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="40" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="39f3c3a3-279c-4819-aa43-6a07a390b8f0"/>
+				<subreportParameter name="Empresa_Cod">
+					<subreportParameterExpression><![CDATA[$P{Empresa_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Filial_Cod">
+					<subreportParameterExpression><![CDATA[$P{Filial_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Cre_CGCCPF">
+					<subreportParameterExpression><![CDATA[$P{Cre_CGCCPF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Centro_Cod">
+					<subreportParameterExpression><![CDATA[$P{Centro_Cod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Pedido_Numero">
+					<subreportParameterExpression><![CDATA[$P{Pedido_Numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "6_subReport_Impostos_Retidos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

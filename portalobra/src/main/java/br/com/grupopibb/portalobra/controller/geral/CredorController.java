@@ -39,6 +39,7 @@ public class CredorController extends EntityController<Credor> implements Serial
     @EJB
     private EstadoFacade estadoFacade;
     private Credor current;
+    private Credor filtroCredor;
     private String codigo;
     private String razaoSocial;
     private EspecieCredor especie;
@@ -90,6 +91,14 @@ public class CredorController extends EntityController<Credor> implements Serial
         this.current = credor;
     }
 
+    public Credor getFiltroCredor() {
+        return filtroCredor;
+    }
+
+    public void setFiltroCredor(Credor filtroCredor) {
+        this.filtroCredor = filtroCredor;
+    }
+    
     /**
      * SelectItem com a lista de espécies de credores.
      *

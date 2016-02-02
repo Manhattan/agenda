@@ -6,6 +6,7 @@ package br.com.grupopibb.portalobra.model.geral;
 
 import br.com.grupopibb.portalobra.model.common.EntityInterface;
 import br.com.grupopibb.portalobra.model.funcionario.Funcionario;
+import br.com.grupopibb.portalobra.model.pedido.Pedido;
 import br.com.grupopibb.portalobra.model.tipos.EnumEspecieCentroCusto;
 import java.io.Serializable;
 import java.util.List;
@@ -43,7 +44,13 @@ import javax.validation.constraints.Size;
             query = " SELECT DISTINCT c FROM CentroCusto c "
             + " WHERE CONCAT(c.empresaCod, c.filialCod, c.codigo) = :empresaCodigo"),
     @NamedQuery(name = "CentroCusto.findAll",
-            query = " SELECT c.empresaCod, c.filialCod, c.codigo, c.nome FROM CentroCusto c ")
+            query = " SELECT c.empresaCod, c.filialCod, c.codigo, c.nome FROM CentroCusto c "),
+   @NamedQuery(name = "CentroCusto.Nome",
+        query = "SELECT cc.nome FROM CentroCusto cc "),
+   @NamedQuery(name = "CentroCusto.findCentrosWithPedidosByForn",
+        query = "SELECT DISTINCT cc FROM CentroCusto cc join cc.pedidos p join p.credor c "
+        + " WHERE c.cpfCnpj = :cpfCnpj "),
+        
 })
 public class CentroCusto implements EntityInterface<CentroCusto> {
 
@@ -131,6 +138,10 @@ public class CentroCusto implements EntityInterface<CentroCusto> {
      */
     @OneToMany(targetEntity = CentroComunicacao.class, mappedBy = "centro")
     private List<CentroComunicacao> contatos;
+    /*
+     */
+    @OneToMany(targetEntity = Pedido.class, mappedBy = "centroCusto")
+    private List<Pedido> pedidos;
     /*
      */
     @Transient
@@ -342,6 +353,14 @@ public class CentroCusto implements EntityInterface<CentroCusto> {
 
     public void setPlanCod(Integer planCod) {
         this.planCod = planCod;
+    }
+
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
 
     public boolean isObraLinkadaOrcamento() {

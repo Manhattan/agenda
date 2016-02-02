@@ -16,6 +16,7 @@ import br.com.grupopibb.portalobra.model.materiais.MaterialSaidaItens;
 import br.com.grupopibb.portalobra.model.tipos.EnumSistemaOrigemEstoque;
 import br.com.grupopibb.portalobra.utils.DateUtils;
 import br.com.grupopibb.portalobra.utils.JsfUtil;
+import br.com.grupopibb.portalobra.utils.ReportUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +47,8 @@ public class MaterialSaidaController extends EntityController<MaterialSaida> imp
     private MaterialSaidaItensFacade materialSaidaItensFacade;
     @EJB
     private CentroCustoFacade centroCustoFacade;
+    @EJB
+    private ReportUtil report;
     private MaterialSaida current;
     private Date dataInicial;
     private Date dataFinal;
@@ -238,6 +241,12 @@ public class MaterialSaidaController extends EntityController<MaterialSaida> imp
     public SelectItem[] getCentroCustoSelect() {
         List<CentroCusto> centro = centroCustoFacade.findAll();
         return JsfUtil.getSelectItems(centro, false, FacesContext.getCurrentInstance());
+    }
+    
+    public void abrirRelatorioAutorizacao(){
+        
+        this.report.abrirRelatorioAutorizacao(this.current);
+        
     }
 
     public MaterialSaida getCurrent() {

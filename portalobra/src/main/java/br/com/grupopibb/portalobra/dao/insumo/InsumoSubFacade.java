@@ -73,7 +73,6 @@ public class InsumoSubFacade extends AbstractEntityBeans<InsumoSub, Long> {
             return lista;
         } else {
             return listPesqParamRange("InsumoSub.findParam", params, range[1] - range[0], range[0]);
-
         }
     }
 

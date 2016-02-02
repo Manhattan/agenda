@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pedidos" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="199f48f4-e7a0-481a-b53e-f3e283cf01d8">
+	<property name="ireport.zoom" value="1.1000000000000023"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="row" backcolor="#C0C0C0">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="Detail" vAlign="Middle" fontSize="7"/>
+	<parameter name="Empresa_Cod" class="java.lang.String"/>
+	<parameter name="Filial_Cod" class="java.lang.String"/>
+	<parameter name="Centro_Cod" class="java.lang.String"/>
+	<parameter name="Cre_CGCCPF" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Pedido_Numero" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 
+ISNULL(CExec.CExec_Numero, '') AS 'Nº Contrato',
+ISNULL(CExec.CExec_Data, '') AS 'Data Contrato',
+ISNULL(CExec.CExec_Valor, 0) AS 'Valor',
+ISNULL(Pedido.Pedido_CentroNumero , '') AS 'Nº Pedido',
+ISNULL(CExec.CExec_PercMatFornecido, 0)AS 'Material Fornecido (%)',
+ISNULL(CExec.CExec_MaterialFornecido, 0)AS 'Material Fornecido Valor',
+ISNULL(CExec.CExec_ValorLiquido, 0) AS 'Valor Líquido do Contrato',
+ISNULL(CONVERT(VARCHAR(500), CExec.CExec_Objeto), '') AS 'Objeto do Contrato'
+
+
+from dbo.Contrato_Execucao CExec,
+     dbo.Pedido Pedido,
+     dbo.Credor Credor,
+     dbo.Centro_de_Custo Centro
+
+where CExec.Pedido_Numero = Pedido.Pedido_Numero -- OK
+
+  and CExec.Cre_Cod = Credor.Cre_cod  -- OK
+
+  and CExec.Empresa_Cod = Centro.Empresa_Cod
+  and CExec.Filial_Cod = Centro.Filial_Cod
+  and CExec.Centro_Cod = Centro.Centro_Cod
+
+  and CExec.Empresa_Cod = $P{Empresa_Cod}
+  and CExec.Filial_Cod = $P{Filial_Cod}
+  and CExec.Centro_Cod = $P{Centro_Cod}
+  and Cre_CGCCPF = $P{Cre_CGCCPF}
+
+  and ( Pedido.Pedido_Numero = $P{Pedido_Numero} or $P{Pedido_Numero} is null )  
+
+order by SUBSTRING(Cre_CGCCPF,1,8),
+         Pedido.Pedido_Data,
+         Pedido.Pedido_CentroNumero]]>
+	</queryString>
+	<field name="Nº Contrato" class="java.lang.Integer"/>
+	<field name="Data Contrato" class="java.sql.Timestamp"/>
+	<field name="Valor" class="java.math.BigDecimal"/>
+	<field name="Nº Pedido" class="java.lang.Integer"/>
+	<field name="Material Fornecido (%)" class="java.math.BigDecimal"/>
+	<field name="Material Fornecido Valor" class="java.math.BigDecimal"/>
+	<field name="Valor Líquido do Contrato" class="java.math.BigDecimal"/>
+	<field name="Objeto do Contrato" class="java.lang.String"/>
+	<variable name="totalContratos" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Valor}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="20" uuid="7ab34c5c-2786-431e-a053-79e967f54ce6"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Pedido:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="245" y="0" width="95" height="31" uuid="c70e1a8d-3c88-465e-80f5-6fba3c482be0"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[Material Fornecido (%)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="0" width="73" height="31" uuid="2bb98624-afa2-47b2-a890-68ba568f61d4"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="88" height="31" uuid="827c1330-972c-4c1f-851c-78b0d30aa215"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Material Fornecido Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="0" width="65" height="31" uuid="67da7935-f8b5-47ac-9b0c-3882712e4c6b"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Data Contrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="521" y="0" width="281" height="31" uuid="b8e96bd8-5bdd-4e4a-bf0c-b798f97d91ae"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Objeto do Contrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="44" height="31" uuid="a1266759-69be-4dec-aae1-a2946de3bc23"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Nº Contrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="428" y="0" width="88" height="31" uuid="4589226f-2eb8-4e3d-adbf-75cabe4a9d5d"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[Valor Líquido do Contrato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="182" y="0" width="63" height="31" uuid="8b8fb77c-a257-4d1a-ac4a-44d29e43203e"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[Nº Pedido]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<frame>
+				<reportElement style="row" x="0" y="0" width="842" height="14" uuid="adb562d8-9da2-49d6-86f2-ff9d570b19e9"/>
+				<textField>
+					<reportElement style="Detail" x="182" y="0" width="63" height="14" uuid="68543fa0-af15-402b-8a63-0ecc7c975890"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nº Pedido}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="245" y="0" width="95" height="14" uuid="b7db8a8e-1041-4741-aa70-1afc472ae935"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Material Fornecido (%)}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="340" y="0" width="88" height="14" uuid="decadcef-bac4-475c-9d21-66afe617953a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Material Fornecido Valor}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement style="Detail" x="44" y="0" width="65" height="14" uuid="a8b33cc6-df20-446e-a666-84e5c59d5b56"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Data Contrato}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000" isBlankWhenNull="false">
+					<reportElement style="Detail" x="428" y="0" width="88" height="14" uuid="ccfbbfef-680f-4d93-bac8-b34fe7d6f18a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Valor Líquido do Contrato}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="0" y="0" width="44" height="14" uuid="50e77982-e43a-48ce-bd59-60e930ec349a"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nº Contrato}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="">
+					<reportElement style="Detail" x="521" y="0" width="281" height="14" uuid="d65a50e0-f3a7-4d08-a40c-4b9b2248bc70"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Objeto do Contrato}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.000">
+					<reportElement style="Detail" x="109" y="0" width="73" height="14" uuid="5ccc2dee-ea00-404d-989a-0b409567b981"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Valor}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="20" width="802" height="1" uuid="d6382430-55ce-4120-878e-1b2b01322a62"/>
+			</line>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="100" y="0" width="82" height="20" uuid="acf37d24-47f5-4743-94f4-8513a7f97211"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalContratos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="189674cd-a199-4c44-bb9e-77bbf5189ca1"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Total Contratos:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="802" height="1" uuid="37eedd18-b51b-4430-9fb3-4f3165d8577c"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

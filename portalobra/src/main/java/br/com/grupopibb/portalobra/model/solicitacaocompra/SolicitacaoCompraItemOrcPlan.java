@@ -185,7 +185,7 @@ public class SolicitacaoCompraItemOrcPlan implements EntityInterface<Solicitacao
     /*
      */
     @Column(name = "SolicItemOrcPlan_Quantidade", insertable = false, updatable = false)
-    private Double valorSolicOriginal;
+    private Double valorSolicOriginal = 0.0;
     /*
      * codigoUnidade
      */

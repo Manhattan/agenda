@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
+                >
+    <f:subview id="estoque_material_dialog">
+
+        <p:dialog dynamic="true" 
+                  widgetVar="dlgEstoqueMateriail" 
+                  closeOnEscape="true" 
+                  modal="true"
+                  resizable="false" 
+                  showEffect="clip" 
+                  hideEffect="clip" 
+                  styleClass="dialog" 
+                  style="position: absolute; float: top; height: 100px" 
+                  position="center" 
+                  header="#{msg.relatorioEstoqueMaterial}">
+            <h:form id="form_dialog_EstMaterial" target="_blank">
+                <p style="font-family:sans-serif; font-size: 20px; text-align: left">Relatório do total de estoque dos centros de custos</p>
+                <p:panel style="float:left">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="mesAno" value="#{msg.mesAno}"/>
+                        <p:calendar  value="#{materiaisEstoqueController.mesAno}" size="15" maxlength="20"  id="mesAno" 
+                                     title="#{msg.mesAno}" pattern="yyyy/MM" maxdate="utilsController.getDate()"  locale="pt"  mode="popup"
+                                     navigator="true" immediate="true" showOn="button"
+                                      style="float: left; position: relative; margin-right: 5px; text-align: left">
+                        </p:calendar>
+                        <p:outputLabel value="#{msg.centro}" for="list-centro-custo"/>
+                        <p:selectOneMenu id="list-centro-custo" value="#{documentoEntradaItemController.centroFiltro}" filter="true" filterMatchMode="contains" style="float: left; position: relative; margin-right: 5px; text-align: left">
+                            <f:selectItem value="#{null}" itemLabel="" />
+                            <f:selectItems value="#{documentoEntradaItemController.centroSelect}" />
+                            <f:converter converterId="centroCustoConverter" />
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:separator />
+                    <div style="float:left; text-align: left; font-weight: bold" > 
+                        <fieldset>
+                            <p>Escolhendo apenas o ano será mostrado de todos centros</p>
+                            <p>Escolhendo centro será mostrado apenas o centro escolhido</p>
+                        </fieldset>
+                    </div>
+                    <div style="float:right">
+                        <fieldset>
+                            <p:commandButton ajax="false" value="#{msg.executar}" 
+                                             actionListener="#{materiaisEstoqueController.abrirRelatorioMateriais(materiaisEstoqueController.mesAno, documentoEntradaItemController.centroFiltro)}" 
+                                             icon="ui-icon-circle-check"
+                                             style="margin: 5px"/>
+                            <br/>
+                            <p:commandButton value="#{msg.cancelar}"  oncomplete="PF('dlgEstoqueMateriail').hide()" 
+                                             icon="ui-icon-closethick" 
+                                             style="margin: 5px"/>
+                        </fieldset>
+                    </div>
+                </p:panel>
+            </h:form>
+        </p:dialog>
+    </f:subview>
+
+
+
+</ui:composition>

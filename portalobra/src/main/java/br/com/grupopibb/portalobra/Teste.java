@@ -4,9 +4,9 @@
  */
 package br.com.grupopibb.portalobra;
 
-import br.com.grupopibb.portalobra.business.pedido.PedidoBusiness;
-import br.com.grupopibb.portalobra.model.tipos.EnumPrazoInicioPedido;
-import br.com.grupopibb.portalobra.utils.NumberUtils;
+import br.com.grupopibb.portalobra.model.solicitacaocompra.SolicitacaoCompraItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,8 +15,16 @@ import br.com.grupopibb.portalobra.utils.NumberUtils;
 public class Teste {
 
     public static void main(String[] args) {
-        System.out.println(Integer.parseInt("000"));
-        System.out.println(NumberUtils.removeZeroEsquerda("000"));
-      //  System.out.println("050030".substring(3, 6));
+        
+        int f = 5;
+        int aux = 1;
+        int res = f;
+        
+        for (int i = 1; i < f; i++){
+            res = res * aux;
+            aux++;
+        }
+        
+        System.out.println(res);
     }
 }

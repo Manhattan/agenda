@@ -11,6 +11,7 @@ import br.com.grupopibb.portalobra.dao.geral.CentroCustoFacade;
 import br.com.grupopibb.portalobra.model.ar.DocumentoEntradaItem;
 import br.com.grupopibb.portalobra.model.geral.CentroCusto;
 import br.com.grupopibb.portalobra.model.insumo.Insumo;
+import br.com.grupopibb.portalobra.model.insumo.InsumoSub;
 import br.com.grupopibb.portalobra.utils.JsfUtil;
 import java.io.Serializable;
 import java.util.List;
@@ -35,7 +36,7 @@ public class DocumentoEntradaItemController extends EntityController<DocumentoEn
     private CentroCustoFacade centroCustoFacade;
     private DocumentoEntradaItem current;
     private CentroCusto centroFiltro;
-    private Insumo insumoFiltro;
+    private InsumoSub insumoFiltro;
 
     @Override
     protected void setEntity(DocumentoEntradaItem t) {
@@ -75,8 +76,8 @@ public class DocumentoEntradaItemController extends EntityController<DocumentoEn
         recreateTable();
     }
 
-    public void initInsumo(Insumo insumo) {
-        this.insumoFiltro = insumo;
+    public void initInsumo(InsumoSub insumoSub) {
+        this.insumoFiltro = insumoSub;
     }
 
     /**
@@ -120,11 +121,11 @@ public class DocumentoEntradaItemController extends EntityController<DocumentoEn
         this.centroFiltro = centroFiltro;
     }
 
-    public Insumo getInsumoFiltro() {
+    public InsumoSub getInsumoFiltro() {
         return insumoFiltro;
     }
 
-    public void setInsumoFiltro(Insumo insumoFiltro) {
+    public void setInsumoFiltro(InsumoSub insumoFiltro) {
         this.insumoFiltro = insumoFiltro;
     }
 }

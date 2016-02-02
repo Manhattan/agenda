@@ -8,13 +8,10 @@ import br.com.grupopibb.portalobra.utils.UtilBeans;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.eclipse.persistence.sessions.Session;
 
 /**
  *
