@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view locale="#{localeController.locale}" contentType="text/html" encoding="UTF-8" id="principal">
+        <h:head>
+            <link rel="shortcut icon" href="#{facesContext.externalContext.requestContextPath}/resources/images/tabicon.ico"
+                  type="image/x-icon" />
+            <title>
+                <ui:insert name="pageTitle">
+                    <h:outputText value="#{msg.principalTitle}"/>
+                </ui:insert>
+            </title>
+            <h:outputStylesheet library="css" name="standard.css" />
+            <h:outputStylesheet library="css" name="tabborder.css" />
+            <h:outputStylesheet library="css" name="icons.css" />
+            <h:outputScript library="js" name="js.js" />
+        </h:head>
+        <h:body>
+            <p:growl id="growl" showDetail="true" sticky="false" 
+                     autoUpdate="true" globalOnly="true" showSummary="true" 
+                     life="6000"/>  
+            <h:panelGrid cellspacing="0" cellpadding="0" styleClass="wrapper">
+                <h:panelGrid columns="1" columnClasses="menu,content">
+                    <p:panel styleClass="menu" id="panelLayout">
+
+                        <h:panelGroup id="topPanelMain">
+                            <table style="width: 100%; vertical-align: left" id="topPanel">
+                                <tr>
+                                    <!--td style="max-width: 50px">
+                                        <h:link outcome="contacts" id="logoPrincipalLink" >
+                                            <h:graphicImage id="img1" library="images" name="logo.png" styleClass="banner" width="25" />
+                                        </h:link>
+                                    </td/!-->
+                                    <td style="width: 1100px; float: left; margin-left: 10px">
+                                        <ui:insert name="menu">
+                                            <ui:include src="include/menu.xhtml" />
+                                        </ui:insert>
+                                    </td>
+                                </tr>
+                            </table>
+                        </h:panelGroup>
+
+                        <table width="100%" >
+                            <tr>
+                                <td colspan="3" align="left" class="contentCentral" valign="top">
+                                    <div class="boxtitle" style="width: auto;">
+                                        <div class="boxtitle-content">
+                                            <ui:insert name="content" />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="j_idt12_footer" class="ui-panel-footer ui-widget-content">
+                            <table width="100%">
+                                <tr>
+                                    <td valign="center" width="95%">
+                                        <a href="http://10.1.1.66:8080/agenda" target="_blank">#{msg.principalTitle}</a>
+                                    </td>
+                                    <td valign="center">
+                                        © 2015
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </p:panel>
+                </h:panelGrid>
+            </h:panelGrid>
+            
+                <div class="topstatus">
+                    <p:ajaxStatus id="topstatus" >
+
+                        <f:facet name="start">
+
+                            <h:graphicImage library="images" name="ajax_1.gif" />
+
+                        </f:facet>
+
+                        <f:facet name="complete">
+                            <h:outputLabel value="" />
+                        </f:facet>
+                        <f:facet name="default">
+                            <h:outputLabel value="" />
+                        </f:facet>
+                    </p:ajaxStatus>
+                </div>
+            
+        </h:body>
+    </f:view>
+</html>

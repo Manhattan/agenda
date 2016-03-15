@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
+                >
+    <f:subview id="svContact">
+        <p:growl autoUpdate="true"  showSummary="true" />
+        <h:panelGroup id="pnlContactFrm"  style="margin-right: 0px; width: auto; margin-bottom: 10px" rendered="#{contactController.current != null}">
+            <fieldset style="padding-top: 18px; padding-left: 12px">
+                <legend>Cadastro de contato</legend>
+                <h:panelGrid columns="2" style="margin-bottom: 10px">
+
+                    <h:outputText value="#{msg.name}: "/> 
+                    <p:inputText value ="#{contactController.current.name}" style="margin-bottom: 5px" size="50" />
+
+                    <h:outputText value="#{msg.telephone}: "/> 
+                    <h:panelGrid columns="2">
+                        <ui:repeat value="#{contactController.current.telephones}" var="fTel">
+                            
+                            <p:inputMask id="maskTel" value ="#{fTel.number}" styleClass="form-compact-input" style="margin-bottom: 3px; float: left;" mask="#{contactController.maskTel}" />
+                            <p:commandButton icon="ui-icon-trash" 
+                                             value="#{msg.remove}" 
+                                             actionListener="#{contactController.remove(contactController.current, fTel)}" 
+                                             update=":formMain:svContact:pnlContactFrm" 
+                                             immediate="true"
+                                             style="font-size: 10px; margin-left: 5px; float:left"/>
+                           
+                            <br/>
+                        </ui:repeat>
+                        <h:panelGroup>
+                            <p:commandButton id="btnLivre"
+                                             
+                                             
+                                             value="Livre"
+                                             
+                                             style="margin-top: 0px; float:left; height: 20px;"
+                                             actionListener="#{contactController.changeMaskTelefoneNormal()}" 
+                                             disabled="#{contactController.changeMaskNormal}"
+                                             immediate="true"
+                                             update=":formMain:svContact:pnlContactFrm" 
+                                             />
+                         <p:commandButton id="btnBrasil"
+                                             icon="maskBrasilIcon"
+                                             iconPos="left"
+                                             value=""
+                                             actionListener="#{contactController.changeMaskTelefoneBrasil()}" 
+                                             disabled="#{contactController.changeMaskBrasil}"
+                                             styleClass="button-only-icon"
+                                             immediate="true"
+                                             update=":formMain:svContact:pnlContactFrm" 
+                                             />
+                            <p:commandButton id="btnUsa"
+                                             icon="maskUsaIcon"
+                                             iconPos="left"
+                                             value=""
+                                             actionListener="#{contactController.changeMaskTelefoneUsa()}" 
+                                             disabled="#{contactController.changeMaskUsa}"
+                                             styleClass="button-only-icon"
+                                             immediate="true"
+                                             update=":formMain:svContact:pnlContactFrm" 
+                                             />
+                        <p:commandButton id="btnAdd"
+                                         icon="ui-icon-plus"
+                                         title="Adicionar telefone"
+                                         iconPos="left"
+                                         style="float: right;  height: 20px; " 
+                                         styleClass="button-only-icon"
+                                         update=":formMain:svContact:pnlContactFrm" 
+                                         actionListener="#{contactController.addTel(contactController.current)}" />
+                        </h:panelGroup>
+                    </h:panelGrid>
+
+                    <h:outputText value="#{msg.email}: "/> 
+                    <h:panelGrid columns="2">
+                        <ui:repeat value="#{contactController.current.emails}" var="fMail">
+                            <p:inputText value ="#{fMail.name}" styleClass="form-compact-input" style="margin-bottom: 3px"/>
+                            <p:commandButton value="#{msg.remove}"
+                                             icon="ui-icon-trash"
+                                             actionListener="#{contactController.remove(contactController.current, fMail)}" 
+                                             update=":formMain:svContact:pnlContactFrm" 
+                                             style="font-size: 10px; margin-left: 5px" />
+                            <br/>
+                        </ui:repeat>
+                        <p:commandButton icon="ui-icon-plus" 
+                                         title="Adicionar email"
+                                         style="float: right;  height: 21px; margin-top: 2px;" 
+                                         update=":formMain:svContact:pnlContactFrm" 
+                                         actionListener="#{contactController.addMail(contactController.current)}" />
+                    </h:panelGrid>
+                    <h:outputText value="#{msg.observation}: "/> 
+                    <p:inputTextarea value ="#{contactController.current.observation}" 
+                                     maxlength="100" 
+                                     cols="51" 
+                                     counter="display" 
+                                     counterTemplate="Restam {0} caracteres" 
+                                     style="margin-top: 4px;"/>
+                    <h:outputText value=""/> 
+                    <h:outputText id="display" style="float: right; text-align: right;"/>
+                    <h:outputText value=""/> 
+                    <h:panelGroup style="float: left; margin-top: 8px;">
+                        <p:commandButton  icon="ui-icon-disk" value="#{msg.ok}" action="#{contactController.createOrEdit()}" update=":formMain"  />
+                        <p:commandButton  immediate="true" icon="ui-icon-cancel" value="#{msg.cancel}" action="#{contactController.clean()}" update=":formMain:pngFrmInc" />
+                    </h:panelGroup>
+                </h:panelGrid>
+
+            </fieldset>
+            <p:separator />
+
+        </h:panelGroup>
+    </f:subview>
+</ui:composition>

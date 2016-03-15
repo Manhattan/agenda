@@ -1,0 +1,68 @@
+
+.bodyCor{
+    background-color: aqua;
+}
+#error-box {
+    width: 800px;
+    height: 600px;
+    padding: 58px 76px 0 76px;
+    color: #ebebeb;
+    font: 12px Arial, Helvetica, sans-serif;
+    background: url("#{resource['images:error-box-backg.png']}") no-repeat left top;
+}
+
+#error-box img {
+    border:none;
+}
+
+.headerLogin{
+    width:350px;
+    font: 12px Arial, Helvetica, sans-serif;
+    color: #ebebeb;
+    padding-bottom: 30px;
+    text-align: left;
+}
+
+#error-box h2 {
+    padding:0;
+    margin:0;
+    color: #ebebeb;
+    font: bold 44px "Calibri", Arial;
+}
+
+
+.error-box-name {
+    float: left;
+    width:80px;
+    text-align: right;
+    color: #ebebeb;
+}
+
+#error-box-field #error-box-pass {
+    float: left;
+    width:430px;
+    margin:0;
+    margin:0 0 7px 0;
+}
+
+
+.form-login  {
+    width: 405px;
+    padding: 10px 4px 6px 3px;
+    border: 1px solid #0d2c52;
+    background-color:#1e4f8a;
+    font-size: 16px;
+    color: #ebebeb;
+}
+
+
+.error-box-options  {
+    clear:both;
+    padding-left:87px;
+    font-size: 11px;
+}
+
+.error-box-options a {
+    color: #ebebeb;
+    font-size: 11px;
+}

@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <f:view contentType="text/html" encoding="UTF-8" locale="#{localeController.locale}">
+        <h:head>
+            <link rel="shortcut icon" href="#{facesContext.externalContext.requestContextPath}/resources/images/tabicon.ico"
+                  type="image/x-icon" />
+            <title>
+                <ui:insert name="pageTitle">
+                    <h:outputText value="#{msg.principalTitle}"/>
+                </ui:insert>
+            </title>
+            <h:outputStylesheet name="login-box.css" library="css" />
+            <h:outputScript name="js.js" library="js"/>
+        </h:head>
+        <h:body style="background-image: url(#{img_param_bg}); background-repeat: no-repeat; background-size: 100%">
+            <div style="position: absolute; left: 50%; top:50%; margin-left: -250px; margin-top: -215px">
+                <p:panel id="panelMain">
+
+                    <div id="logoBox">
+                        <h:panelGrid columns="1" style="text-align: center" styleClass="headerLogin">
+                            <h:graphicImage name="#{img_param}" library="images" width="150px"/>
+                            <h:outputText value="#{msgWelcome}" />
+                            <h:outputText value="#{msgLogin}" />
+                        </h:panelGrid>
+                    </div>
+                    <div style="position: relative; left: 50%; margin-left: -125px">
+                        <p:panel id="panelContent" style="text-align: center">
+                            <h:outputText value="#{info_param}" />
+                            <ui:insert name="conteudo">
+                            </ui:insert>
+                        </p:panel>
+                    </div>
+                </p:panel>               
+            </div>
+        </h:body>
+    </f:view>
+</html>

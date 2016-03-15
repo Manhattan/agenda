@@ -1,0 +1,119 @@
+.avalSmallLRB
+{
+    min-width: 50px;
+    border-left: solid 1px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+    text-align: center;
+}
+
+.avalSmallRB
+{
+    min-width: 50px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+    text-align: center;
+}
+
+.avalSmallLR
+{
+    min-width: 50px;
+    border-left: solid 1px;
+    border-right: solid 1px;
+    text-align: center;
+}
+
+.avalMediumLRB
+{
+    min-width: 200px;
+    border-left: solid 1px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+    text-align: center;
+}
+
+.avalMediumLR
+{
+    min-width: 200px;
+    border-left: solid 1px;
+    border-right: solid 1px;
+    text-align: center;
+}
+
+.avalMediumRB
+{
+    min-width: 200px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+    text-align: center;
+}
+
+.avalMediumR
+{
+    min-width: 200px;
+    border-right: solid 1px;
+    text-align: center;
+}
+
+.avalMediumB
+{
+    min-width: 200px;
+    border-bottom: solid 1px;
+    text-align: center;
+}
+
+.avalItemB
+{
+    min-width: 150px;
+    padding-left: 5px;
+    border-bottom: solid 1px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.avalItemLB
+{
+    min-width: 150px;
+    padding-left: 5px;
+    border-left: solid 1px;
+    border-bottom: solid 1px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.avalItemLRB
+{
+    min-width: 150px;
+    padding-left: 5px;
+    border-left: solid 1px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.avalItem
+{
+    min-width: 150px;
+    padding-left: 5px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.font-smaller1 tr td
+{
+    font-size: 80%;
+}
+
+.font-smaller1 tr th
+{
+    font-size: 80%;
+}
+
+.accessSmallB
+{
+    min-width: 50px;
+    border-bottom: solid 1px;
+    text-align: center;
+}
+

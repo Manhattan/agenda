@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+        <cc:attribute name="entityBean" required="true" />
+        <cc:attribute name="formName" required="true"/>
+        <cc:attribute name="renderedNew" required="false" default="#{true}" />
+        <cc:attribute name="regsPerPage" required="false" default="#{false}" />
+        <cc:attribute name="regsPerPageAttribute" required="false" default="#{10}" />
+        <cc:actionSource name="regsPerPageListener" targets="selectRegsPerPage" rendered="#{cc.attrs.regsPerPage}" />
+        <cc:attribute name="regsPerPageAction" method-signature="java.lang.String action()" />
+    </cc:interface>
+    <!-- Update Keyword Description
+    @this Component that triggers the PPR is updated
+    @parent Parent of the PPR trigger is updated.
+    @form Encapsulating form of the PPR trigger is updated
+    @none PPR does not change the DOM with ajax response.
+    @all Whole document is updated as in non-ajax requests.-->
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <div class="pagging">
+            <table width="100%" style="font-size: 0.9em;">
+                <tr>
+                    <td width="400px">
+                        <h:panelGrid columns="4" style="font-size: 1em;">
+                             <h:outputText value="#{cc.attrs.entityBean.pagination.pageFirstItem + 1}..
+                                          #{cc.attrs.entityBean.pagination.pageLastItem + 1}/
+                                          #{cc.attrs.entityBean.pagination.itemsCount}"/>
+                            <h:commandButton actionListener="#{cc.attrs.entityBean.previous}" 
+                                             value="#{msg.previous} #{cc.attrs.entityBean.pagination.pageSize}" 
+                                             id="previousLink"
+                                             disabled="#{!cc.attrs.entityBean.pagination.hasPreviousPage}" >
+                                <p:ajax update="#{cc.attrs.formName}"/>
+                            </h:commandButton>
+                            <h:commandButton actionListener="#{cc.attrs.entityBean.next}" 
+                                             value="#{msg.next} #{cc.attrs.entityBean.pagination.pageSize}" 
+                                             id="nextLink"
+                                             disabled="#{!cc.attrs.entityBean.pagination.hasNextPage}" >
+                                <p:ajax update="#{cc.attrs.formName}"/>
+                            </h:commandButton>
+
+                            <h:commandButton action="#{cc.attrs.entityBean.prepareCreate}" value="#{msg.novo}" 
+                                             id="novoLink" rendered="#{cc.attrs.renderedNew}" >
+                            </h:commandButton>
+
+                            <h:selectOneMenu id="selectRegsPerPage" style="height: 20px; padding-bottom: 1px" valueChangeListener="#{cc.attrs.regsPerPageAction}" rendered="#{cc.attrs.regsPerPage}" value="#{cc.attrs.regsPerPageAttribute}">
+                                <f:selectItem itemValue="50" itemLabel="50" />
+                                <f:selectItem itemValue="100" itemLabel="100" />
+                                <f:selectItem itemValue="200" itemLabel="200" />
+                                <p:ajax update="#{cc.attrs.formName}" />
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+                    </td> 
+                </tr>
+            </table>
+        </div>
+    </cc:implementation>
+</html>

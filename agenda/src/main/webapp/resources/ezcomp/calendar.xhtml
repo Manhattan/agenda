@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui">
+
+    <!-- INTERFACE -->
+    <cc:interface>
+                <cc:attribute name="valor" required="true" />
+                <cc:attribute name="id" required="true" />
+                <cc:attribute name="size" required="false" default="30"/>
+                <cc:attribute name="title" required="false" default="#{msg.data}"/>
+                <cc:attribute name="requerido" required="false" default="#{true}"/>
+                <cc:attribute name="readonly" required="false" default="#{false}"/>
+                <cc:attribute name="pattern" required="false" default="dd/MM/yyyy"/>
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        <p:calendar id="#{cc.attrs.id}" readonly="#{cc.attrs.readonly}"  value="#{cc.attrs.valor}" title="#{cc.attrs.title}" 
+                    size="#{cc.attrs.size}" locale="pt" timeZone="#{initParam['timezone']}" pattern="#{cc.attrs.pattern}" 
+                    showOn="button" required="#{cc.attrs.requerido}" requiredMessage="#{msg.campoObrigatorio}" 
+                    onkeyup="formatar(this, '##/##/####', event)" maxlength="10" 
+                    showButtonPanel="true" navigator="true">
+
+        </p:calendar>
+    </cc:implementation>
+</html>

@@ -1,0 +1,136 @@
+
+.bodyCor{
+    background-color: aqua;
+}
+#login-box {
+    width:600px;
+    height: 410px;
+    padding: 58px 40px 0 40px;
+    color: #ebebeb;
+    font: 12px Arial, Helvetica, sans-serif;
+    background: white;
+}
+
+#panelMain{
+    background:rgba(255,255,255,0.9);
+    width: 440px;
+    height: 430px;
+    padding-bottom: 50px;
+    border-radius: 0.8em 0.8em 0.8em 0.8em;
+}
+
+#logoBox{
+    position: relative; 
+    left: 50%; 
+    margin-left: -175px;
+}
+
+#panelContent{
+    background:rgba(255,255,255,0.7);
+    position: relative;
+    width: 250px;
+    border-color: #d5d5d5;
+
+}
+
+.textLabel{
+    position: relative;
+    font-size: 14px;
+    color: #585b57;
+}
+
+.inputLogin{
+    padding: 6px 4px 6px 3px;
+    color: #7D0000;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+
+.inputSenha{
+    padding: 6px 4px 6px 3px;
+    color: #7D0000;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.btnLogin{
+    margin-top: 15px; 
+    font-size: medium; 
+    width: 100%;
+}
+
+
+
+
+#login-box img {
+    border:none;
+}
+
+.headerLogin{
+    width:350px;
+    font: 13px Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    color: gray;
+    padding-bottom: 30px;
+    text-align: left;
+}
+
+#login-box h2 {
+    padding:0;
+    margin:0;
+    color: black;
+    font: bold 44px "Calibri", Arial;
+}
+
+#login-box h4 {
+    padding:0;
+    margin:0;
+    margin-left: 42px;
+    color: white;
+    font: bold 14px "Calibri", Arial;
+}
+
+
+.login-box-name {
+    float: left;
+    width:80px;
+    text-align: right;
+    color: #ebebeb;
+}
+
+#j_username #j_password {
+    float: left;
+    width:230px;
+    margin:0;
+    margin:0 0 7px 0;
+}
+
+
+.form-login  {
+    width: 205px;
+    padding: 10px 4px 6px 3px;
+    border: 1px solid #0d2c52;
+    background-color:#CCD6F5;
+    font-size: 16px;
+    color: #7D0000;
+}
+
+
+.login-box-options  {
+    clear:both;
+    padding-left:87px;
+    font-size: 11px;
+}
+
+.login-box-options a {
+    color: #ebebeb;
+    font-size: 11px;
+}
+
+.pagging { height:20px; padding:8px 10px; line-height:19px; color:#949494; margin-bottom: 110px;}
+.pagging a{ background:url("#{resource['images:pagging_login.gif']}") repeat-x 0 0; height:20px; float:left; padding:0 8px; border:solid 1px #d5d5d5; text-decoration: none; color:#949494; margin-left: 5px; }
+.pagging a:hover { border-color:#1484e6; background:#b6d5ff; color:#333; }
+.pagging span{ float:left; margin-left:5px; padding-top:2px; }

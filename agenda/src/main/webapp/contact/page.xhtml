@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:arq="http://java.sun.com/jsf/composite/ezcomp"
+                template="../templates/layout.xhtml"
+                >
+    <ui:param name="titulomenu" value="#{msg.contatos}" />
+    <ui:define name="content" >
+        <h:panelGroup id="panelMain">
+            <h:form id="formMain" class="form-compact">
+                <h:panelGroup id="pngFrmInc" >
+                    <ui:include src="form.xhtml" rendered="#{contactController.current != null}" />
+                </h:panelGroup>
+
+
+                <h:outputText value="#{msg.search}:" style="margin-right: 10px;" />
+                <p:inputText value="#{contactController.name}" style="min-width: 300px; margin-right: 10px"  />
+                <p:commandButton icon="ui-icon-search" value="#{msg.search}" actionListener="#{contactController.search()}" update=":formMain" />
+                <p:commandButton  icon="ui-icon-extlink" actionListener="#{contactController.cleanForm()}" action="#{contactController.search()}" title="#{msg.showAll}" update=":formMain" style="margin-right: 10px;" />
+
+                <p:commandLink immediate="true" value="#{msg.a}" actionListener="#{contactController.searchByChar(msg.a)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.b}" actionListener="#{contactController.searchByChar(msg.b)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.c}" actionListener="#{contactController.searchByChar(msg.c)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.d}" actionListener="#{contactController.searchByChar(msg.d)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.e}" actionListener="#{contactController.searchByChar(msg.e)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.f}" actionListener="#{contactController.searchByChar(msg.f)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.g}" actionListener="#{contactController.searchByChar(msg.g)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.h}" actionListener="#{contactController.searchByChar(msg.h)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.i}" actionListener="#{contactController.searchByChar(msg.i)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.j}" actionListener="#{contactController.searchByChar(msg.j)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.k}" actionListener="#{contactController.searchByChar(msg.k)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.l}" actionListener="#{contactController.searchByChar(msg.l)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.m}" actionListener="#{contactController.searchByChar(msg.m)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.n}" actionListener="#{contactController.searchByChar(msg.n)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.o}" actionListener="#{contactController.searchByChar(msg.o)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.p}" actionListener="#{contactController.searchByChar(msg.p)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.q}" actionListener="#{contactController.searchByChar(msg.q)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.r}" actionListener="#{contactController.searchByChar(msg.r)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.s}" actionListener="#{contactController.searchByChar(msg.s)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.t}" actionListener="#{contactController.searchByChar(msg.t)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.u}" actionListener="#{contactController.searchByChar(msg.u)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.v}" actionListener="#{contactController.searchByChar(msg.v)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.w}" actionListener="#{contactController.searchByChar(msg.w)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.x}" actionListener="#{contactController.searchByChar(msg.x)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.y}" actionListener="#{contactController.searchByChar(msg.y)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.z}" actionListener="#{contactController.searchByChar(msg.z)}" update=":formMain" style="margin-right: 10px; font-size: 15px" />
+                <p:commandLink immediate="true" value="#{msg.all}" actionListener="#{contactController.searchByChar(null)}" update=":formMain" style="font-size: 15px" />
+
+                <h:panelGroup id="pngTable">
+                    <table class="table table-responsive" style="margin-top: 10px">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <p:commandButton value ="#{msg.new}" icon="ui-icon-circle-plus" iconPos="left" action="#{contactController.prepareCreate()}" update=":formMain" style="font-size:13px" />
+                                </th>
+                                <th align='center'>#{msg.name}</th>
+                                <th align='center'>#{msg.telephone}</th>
+                                <th align='center'>#{msg.email} </th>
+                                <th align='center'>#{msg.observation}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{contactController.items}" var="item" varStatus="s">
+                                <tr>
+                                    <td style="min-width: 60px">
+                                        <p:commandButton immediate="true" value="" actionListener="#{contactController.destroy()}" update=":formMain"
+                                                         icon="ui-icon-close"  iconPos="left" style="width: 30px; height: 20px; margin-right: 5px">
+                                            <p:confirm header="#{msg.contactExclusion}" message="#{msg.areYouSureExclude}" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                        <p:commandButton immediate="true" value="" action="#{contactController.prepareEdit(item)}" update=":formMain:pngFrmInc"
+                                                         icon="ui-icon-pencil" iconPos="left" style="width: 30px; height: 20px"  />
+
+                                        <p:confirmDialog global="true" >
+                                            <p:commandButton immediate="true" value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                            <p:commandButton immediate="true" value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                        </p:confirmDialog>
+                                    </td>
+                                    <td align='center' style="width: 250px">
+                                        <h:outputText value="#{item.name}" />
+                                    </td>
+
+                                    <td align='center' style="width: 300px">
+                                        <ui:repeat value="#{item.telephones}" var="tel" varStatus="t">
+                                            <h:outputText value="#{tel.number} / " style="margin-right: 5px; display: inline-block" />
+                                        </ui:repeat>
+                                    </td>
+
+                                    <td align='center' style="width: 250px">
+                                        <ui:repeat value="#{item.emails}" var="mail" varStatus="m">
+                                            <h:outputText value="#{mail.name} / " style="margin-right: 5px" />
+                                        </ui:repeat>
+                                    </td>
+                                    <td align='center' style="width: 250px">
+                                        <h:outputText value="#{item.observation}" style="margin-right: 5px"/>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                    <arq:paginator id="pagContact" regsPerPage="true" regsPerPageAction="#{contactController.search()}" entityBean="#{contactController}" regsPerPageAttribute="#{contactController.regsPerPage}" formName=":formMain:pngTable" renderedNew="false"/>
+                    <!--arq:paginator id="pagContact" entityBean="# {contactController}" formName=":formMain:pngTable" renderedNew="false" /!-->
+                </h:panelGroup>
+            </h:form>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

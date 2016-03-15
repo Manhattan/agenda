@@ -1,0 +1,278 @@
+.cadastroIco {
+    background: url("#{resource['images:folders_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+
+}
+
+.cadastroUserIco {
+    background: url("#{resource['images:user_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+
+}
+
+.pessoalIco {
+    background: url("#{resource['images:settings_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+
+}
+
+.pessoalPassIco {
+    background: url("#{resource['images:key_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.sairIco {
+    background: url("#{resource['images:door_out_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.ajudaIco {
+    background: url("#{resource['images:help_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.addIco {
+    background: url("#{resource['images:book_add_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.addUserIco {
+    background: url("#{resource['images:user_add_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.pessoalIcon {
+    background: url("#{resource['images:folder_user_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.pessoalPasswordIco {
+    background: url("#{resource['images:lock_edit_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.tipoEndereco{
+    background: url("#{resource['images:tags_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.dockFileIco {
+    background: url("#{resource['images:document_signature_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.dockEditFileIco {
+    background: url("#{resource['images:document_editing_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.downlodIco {
+    background: url("#{resource['images:download_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.configIco {
+    background: url("#{resource['images:config_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.smsIco {
+    background: url("#{resource['images:sms_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.smsConfigIco {
+    background: url("#{resource['images:sms_config.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.smsGroupIco {
+    background: url("#{resource['images:sms_group.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.emailFailGroupIco {
+    background: url("#{resource['images:email_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+
+.entregaIco {
+    background: url("#{resource['images:entrega_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.produtoIco {
+    background: url("#{resource['images:produto_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.barrIcon{
+    background: url("#{resource['images:barr.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.fileAddIcon{
+    background: url("#{resource['images:file_add_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.fileUploadIcon{
+    background: url("#{resource['images:note_upload_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.workIco {
+    background: url("#{resource['images:work.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.pedidoIco {
+    background: url("#{resource['images:shopcart.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.pedidoNovoIco {
+    background: url("#{resource['images:shopcartadd.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.pedidoHistoricoIco {
+    background: url("#{resource['images:shopcarthist.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.pedidosIco {
+    background: url("#{resource['images:pedidos.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.pedidosFinIco {
+    background: url("#{resource['images:file_edit.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.pedidosOpeIco {
+    background: url("#{resource['images:pedido_serch.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.emailSupplierConfIco {
+    background: url("#{resource['images:email_supplier.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.processIco {
+    background: url("#{resource['images:exec_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.bankIco {
+    background: url("#{resource['images:bank_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.fileIco {
+    background: url("#{resource['images:file_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+.historicoIco {
+    background: url("#{resource['images:historico.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.propIco {
+    background: url("#{resource['images:prop.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.cancelIco{
+    background: url("#{resource['images:lixo_16.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.ticketIco {
+    background: url("#{resource['images:ticket.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+
+.arrowDownOrangeIco {
+    background: url("#{resource['images:down-arrow-orange.png']}") no-repeat !important;
+    height:20px !important;
+    width:20px !important;
+    background-color: #c3c3c3;
+}
+
+.arrowUpGreenIco {
+    background: url("#{resource['images:up-arrow-green.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.filterIco {
+    background: url("#{resource['images:filter_icon.png']}") no-repeat !important;
+    height:16px !important;
+    width:16px !important;
+}
+
+.filterClear{
+    background: url("#{resource['images:clear_filter_icon.png']}") no-repeat !important;
+    height:18px !important;
+    width:18px !important;
+}
+
+.button-only-icon{
+    width: 30px; 
+    height: 20px; 
+    margin-right: 5px;
+    
+}
+
+.maskUsaIcon{
+    background-image:  url("../resources/images/usa.png") !important;
+    border-radius: 0px;
+    height:13.5px !important;
+    width:16px !important;
+}
+
+.maskBrasilIcon{
+    background: url("#{resource['images:brasil.png']}") no-repeat !important;
+    border-radius: 0px !important;
+    padding-top: 2px !important;
+    height:15px !important;
+    width:18px !important;
+}
+
